@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
-using System.Collections.Generic;
 
 public class Warehouse : MonoBehaviour 
 {
@@ -32,14 +30,20 @@ public class Warehouse : MonoBehaviour
             workers = value;
         }
     }
+    public decimal Wage
+    {
+        get
+        {
+            return wage;
+        }
+        set
+        {
+            wage = value;
+        }
+    }
 
-    private float nextPayday = 10f; 
+    public float NextPayday = 10f; 
     private float paydayPeriod = 10f;
-
-    public Text TxtMoney;
-    public Text TxtWorkers;
-    public Text TxtUntilPayday;
-    public Text TxtPaydayAmount;
 
     public void HireWorker ()
     {
@@ -51,27 +55,22 @@ public class Warehouse : MonoBehaviour
         workers -= workers == 0 ? 0 : 1;
     }
 
-	// Use this for initialization
 	void Start () 
     {
 
 	}
 	
-	// Update is called once per frame
 	void Update () 
     {
-        if (Time.time > nextPayday) 
+        if (Time.time > NextPayday) 
          {
-             nextPayday = Time.time + paydayPeriod;
+             NextPayday = Time.time + paydayPeriod;
              money -= workers * 50;
          }
 	}
 
     void LateUpdate ()
     {
-        TxtMoney.text = "$" + money;
-        TxtWorkers.text = "Workers: " + workers;
-        TxtUntilPayday.text = "Next Payday: " + Mathf.CeilToInt(nextPayday-Time.time);
-        TxtPaydayAmount.text = "Payday Cost: " + workers * wage;
+
     }
 }
