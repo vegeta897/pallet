@@ -1,12 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Warehouse : MonoBehaviour 
 {
 
-    private decimal money = 1000;
+    private decimal money = 10000;
     private int workers = 2;
     private decimal wage = 50;
+    private int stock = 0;
+
+    private List<Delivery> deliveries = new List<Delivery>();
+
+    public UIManager UIManager;
 
     public decimal Money
     {
@@ -41,9 +47,23 @@ public class Warehouse : MonoBehaviour
             wage = value;
         }
     }
+    public int Stock
+    {
+        get
+        {
+            return stock;
+        }
+        set
+        {
+            stock = value;
+        }
+    }
 
     public float NextPayday = 10f; 
     private float paydayPeriod = 10f;
+
+    private float nextDelivery = 5f;
+    private float deliveryPeriod = 30f;
 
     public void HireWorker ()
     {
@@ -67,6 +87,13 @@ public class Warehouse : MonoBehaviour
              NextPayday = Time.time + paydayPeriod;
              money -= workers * 50;
          }
+        if (Time.time > nextDelivery)
+        {
+            nextDelivery = Time.time + deliveryPeriod;
+            Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
+            deliveries.Add(newDelivery);
+            UIManager.AddActionItem(newDelivery,deliveries.Count);
+        }
 	}
 
     void LateUpdate ()
