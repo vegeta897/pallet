@@ -62,8 +62,8 @@ public class Warehouse : MonoBehaviour
     public float NextPayday = 10f; 
     private float paydayPeriod = 10f;
 
-    private float nextDelivery = 5f;
-    private float deliveryPeriod = 30f;
+    private float nextDelivery = 2f;
+    private float deliveryPeriod = 4f;
 
     public void HireWorker ()
     {
@@ -91,8 +91,9 @@ public class Warehouse : MonoBehaviour
         {
             nextDelivery = Time.time + deliveryPeriod;
             Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
+            newDelivery.Init(deliveries.Count, 25);
             deliveries.Add(newDelivery);
-            UIManager.AddActionItem(newDelivery,deliveries.Count);
+            UIManager.AddActionItem(newDelivery);
         }
 	}
 

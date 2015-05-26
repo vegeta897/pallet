@@ -1,4 +1,4 @@
 # Pallet
-Morgs' baby
+*Morgs' baby*
 
-A 2D Unity game
+An isometric warehouse simulator/tycoon made in Unity

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class UIManager : MonoBehaviour 
@@ -25,11 +26,11 @@ public class UIManager : MonoBehaviour
         InpWage.text = warehouse.Wage.ToString("F2");
     }
 
-    public void AddActionItem(Delivery newDelivery, int index)
+    public void AddActionItem(Delivery newDelivery)
     {
         ActionItem actionItem = Instantiate(PanActionItem) as ActionItem;
         actionItem.transform.SetParent(PanActionItems.transform, false);
-        actionItem.SetQuantity(newDelivery.Quantity);
+        actionItem.Delivery = newDelivery;
     }
 
 	void Start () 
@@ -40,6 +41,11 @@ public class UIManager : MonoBehaviour
             GameObject.Destroy(child.gameObject);
         }
 	}
+
+    void Update()
+    {
+         
+    }
 	
     void LateUpdate()
     {
