@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class UIManager : MonoBehaviour
     public PendingItemActions PanActiveItemActions;
 
     private Warehouse warehouse;
+    private int selectedPendingID;
+    private int selectedActiveID;
+    private Dictionary<int, PendingActiveItem> pendingItems = new Dictionary<int, PendingActiveItem>();
+    private Dictionary<int, PendingActiveItem> activeItems = new Dictionary<int, PendingActiveItem>();
 
     public void SetWage()
     {
@@ -33,16 +38,53 @@ public class UIManager : MonoBehaviour
 
     public void AddPendingItem(Delivery newDelivery)
     {
-        PendingActiveItem actionItem = Instantiate(BtnPendingItem) as PendingActiveItem;
-        actionItem.transform.SetParent(PanPendingItems.transform, false);
-        actionItem.Delivery = newDelivery;
-        actionItem.ItemType = "pending";
-        actionItem.UIManager = this;
+        PendingActiveItem pendingItem = Instantiate(BtnPendingItem) as PendingActiveItem;
+        pendingItem.transform.SetParent(PanPendingItems.transform, false);
+        pendingItem.Delivery = newDelivery;
+        pendingItem.ItemType = "pending";
+        pendingItem.UIManager = this;
+        pendingItems[newDelivery.DeliveryID] = pendingItem;
     }
-    public void SelectPendingActiveItem(int index, string itemType)
+
+    public void SelectPendingActiveItem(int id, string itemType)
     {
-        PanPendingItemActions.gameObject.SetActive(index >= 0 && itemType == "pending");
-        PanActiveItemActions.gameObject.SetActive(index >= 0 && itemType == "active");
+        if(itemType == "pending")
+        {
+            selectedPendingID = id;
+            PanPendingItemActions.gameObject.SetActive(id >= 0);
+        }
+        else
+        {
+            selectedActiveID = id;
+            PanActiveItemActions.gameObject.SetActive(id >= 0);
+        }
+        foreach (KeyValuePair<int, PendingActiveItem> item in (itemType == "pending" ? pendingItems : activeItems))
+        {
+            item.Value.Selected = item.Key == id;
+        }
+    }
+
+    public void AcceptDelivery()
+    {
+        PanPendingItemActions.gameObject.SetActive(false);
+        warehouse.AcceptDelivery(selectedPendingID);
+        PendingActiveItem activeItem = Instantiate(BtnActiveItem) as PendingActiveItem;
+        activeItem.transform.SetParent(PanActiveItems.transform, false);
+        activeItem.Delivery = pendingItems[selectedPendingID].Delivery;
+        activeItem.ItemType = "active";
+        activeItem.UIManager = this;
+        activeItems[selectedPendingID] = activeItem;
+        GameObject.Destroy(pendingItems[selectedPendingID].gameObject);
+        pendingItems.Remove(selectedPendingID);
+        selectedPendingID = -1;
+    }
+    public void RejectDelivery()
+    {
+        PanPendingItemActions.gameObject.SetActive(false);
+        warehouse.RejectDelivery(selectedPendingID);
+        GameObject.Destroy(pendingItems[selectedPendingID].gameObject);
+        pendingItems.Remove(selectedPendingID);
+        selectedPendingID = -1;
     }
 
     void Start()

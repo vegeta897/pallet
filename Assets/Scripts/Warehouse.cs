@@ -9,10 +9,10 @@ public class Warehouse : MonoBehaviour
     private int workers = 2;
     private decimal wage = 50;
     private int stock = 0;
-
-    private List<Delivery> deliveries = new List<Delivery>();
+    private Dictionary<int, Delivery> deliveries = new Dictionary<int, Delivery>();
 
     public UIManager UIManager;
+    public int LastDeliveryID = 0;
 
     public decimal Money
     {
@@ -73,6 +73,17 @@ public class Warehouse : MonoBehaviour
         workers -= workers == 0 ? 0 : 1;
     }
 
+    public void AcceptDelivery(int id)
+    {
+        deliveries[id].Accepted = true;
+    }
+
+    public void RejectDelivery(int id)
+    {
+        ScriptableObject.Destroy(deliveries[id]);
+        deliveries.Remove(id);
+    }
+
     IEnumerator PayDay(float interval)
     {
         while(true)
@@ -91,8 +102,9 @@ public class Warehouse : MonoBehaviour
             yield return new WaitForSeconds(interval);
             Debug.Log("new delivery request!");
             Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
-            newDelivery.Init(deliveries.Count, 25);
-            deliveries.Add(newDelivery);
+            LastDeliveryID += 1;
+            newDelivery.Init(LastDeliveryID, Random.Range(1,8)*5);
+            deliveries[LastDeliveryID] = newDelivery;
             UIManager.AddPendingItem(newDelivery);
         }
     }

@@ -4,12 +4,13 @@ using System.Collections;
 public class Delivery : ScriptableObject 
 {
     public int Quantity;
-    public int Index;
+    public int DeliveryID;
+    public bool Accepted;
 
-    public void Init(int index, int qty)
+    public void Init(int id, int qty)
     {
         Quantity = qty;
-        Index = index;
+        DeliveryID = id;
     }
 
 	void Start () 

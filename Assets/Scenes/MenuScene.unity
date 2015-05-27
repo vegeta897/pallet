@@ -208,7 +208,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -50, y: 425}
-  m_SizeDelta: {x: 600, y: 400}
+  m_SizeDelta: {x: 580, y: 400}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &53354995
 MonoBehaviour:
@@ -444,7 +444,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22431308, guid: b036405e2e9ceca47af1cca597822504, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 580
+      value: 560
       objectReference: {fileID: 0}
     - target: {fileID: 22431308, guid: b036405e2e9ceca47af1cca597822504, type: 2}
       propertyPath: m_SizeDelta.y
@@ -498,7 +498,7 @@ GameObject:
   - 114: {fileID: 145763922}
   - 114: {fileID: 145763921}
   m_Layer: 5
-  m_Name: BtnReject
+  m_Name: BtnVoid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -717,7 +717,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22493380, guid: cec6fca03f438164e96441f34054c06f, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 580
+      value: 560
       objectReference: {fileID: 0}
     - target: {fileID: 22493380, guid: cec6fca03f438164e96441f34054c06f, type: 2}
       propertyPath: m_SizeDelta.y
@@ -746,6 +746,10 @@ Prefab:
     - target: {fileID: 22493380, guid: cec6fca03f438164e96441f34054c06f, type: 2}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11408010, guid: cec6fca03f438164e96441f34054c06f, type: 2}
+      propertyPath: m_Text
+      value: 'Delivery #12'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cec6fca03f438164e96441f34054c06f, type: 2}
@@ -908,7 +912,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -50, y: 480}
-  m_SizeDelta: {x: 600, y: 50}
+  m_SizeDelta: {x: 580, y: 50}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &310561713
 MonoBehaviour:
@@ -980,7 +984,7 @@ RectTransform:
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 100}
+  m_SizeDelta: {x: 580, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &317255507
 MonoBehaviour:
@@ -1089,8 +1093,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1468655326}
-        m_MethodName: 
+      - m_Target: {fileID: 1468655327}
+        m_MethodName: AcceptDelivery
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1374,7 +1378,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 50, y: 480}
-  m_SizeDelta: {x: 600, y: 50}
+  m_SizeDelta: {x: 580, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &450030736
 MonoBehaviour:
@@ -1464,7 +1468,7 @@ GameObject:
   - 222: {fileID: 647501612}
   - 114: {fileID: 647501611}
   m_Layer: 5
-  m_Name: TxtBtnAccept
+  m_Name: TxtBtnPick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1503,7 +1507,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
@@ -1512,9 +1516,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Accept
-
-'
+  m_Text: Pick
 --- !u!222 &647501612
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1749,9 +1751,9 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 600, y: 0}
-  m_SizeDelta: {x: 600, y: 0}
-  m_Pivot: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 580, y: 0}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &814409216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2095,7 +2097,7 @@ RectTransform:
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 100}
+  m_SizeDelta: {x: 580, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &966260118
 MonoBehaviour:
@@ -2386,7 +2388,7 @@ GameObject:
   - 114: {fileID: 1427951977}
   - 114: {fileID: 1427951976}
   m_Layer: 5
-  m_Name: BtnAccept
+  m_Name: BtnPick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2580,9 +2582,9 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 600, y: 0}
-  m_SizeDelta: {x: 600, y: 0}
-  m_Pivot: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 580, y: 0}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1486137183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2783,6 +2785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManager: {fileID: 1468655327}
+  LastDeliveryID: 0
   PaydayInterval: 10
   NextPayday: 0
 --- !u!4 &1592914153
@@ -3014,7 +3017,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
@@ -3107,8 +3110,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1468655326}
-        m_MethodName: 
+      - m_Target: {fileID: 1468655327}
+        m_MethodName: RejectDelivery
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3159,7 +3162,7 @@ GameObject:
   - 222: {fileID: 1797936674}
   - 114: {fileID: 1797936673}
   m_Layer: 5
-  m_Name: TxtBtnReject
+  m_Name: TxtBtnVoid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3207,7 +3210,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Reject
+  m_Text: 'Void
+
+'
 --- !u!222 &1797936674
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3251,7 +3256,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 50, y: 425}
-  m_SizeDelta: {x: 600, y: 400}
+  m_SizeDelta: {x: 580, y: 400}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1837028418
 MonoBehaviour:
@@ -3520,7 +3525,7 @@ RectTransform:
   m_RootOrder: 11
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 655, y: 425}
+  m_AnchoredPosition: {x: 635, y: 425}
   m_SizeDelta: {x: 20, y: 400}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2121840019

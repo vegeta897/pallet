@@ -3,15 +3,18 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 
-public class PendingActiveItem : MonoBehaviour, IDeselectHandler, ISelectHandler
+public class PendingActiveItem : MonoBehaviour, IPointerClickHandler
 {
     public string ItemType;
+    public Text TxtPendingTitle;
+    public Text TxtActiveTitle;
     public Text TxtQuantity;
     private Button thisButton;
     private ColorBlock defaultColors;
     private ColorBlock selectedColors;
     private Delivery delivery;
     private UIManager uiManager;
+    private bool selected;
     public UIManager UIManager
     {
         get 
@@ -33,22 +36,36 @@ public class PendingActiveItem : MonoBehaviour, IDeselectHandler, ISelectHandler
         {
             delivery = value;
             TxtQuantity.text = delivery.Quantity.ToString(); // Update delivery quantity text
+            if(delivery.Accepted)
+            {
+                TxtActiveTitle.text = "Delivery #" + delivery.DeliveryID;
+            }
+        }
+    }
+    public bool Selected
+    {
+        get
+        {
+            return selected;
+        }
+        set
+        {
+            selected = value;
+            thisButton.colors = value ? selectedColors : defaultColors;
         }
     }
 
-    public void OnDeselect(BaseEventData data)
-    {
-        Debug.Log(ItemType + " item " + delivery.Index + "deselected");
-        thisButton.colors = defaultColors;
-        uiManager.SelectPendingActiveItem(-1,ItemType); // Hide item actions panel
-    }
+    //public void OnDeselect(BaseEventData data)
+    //{
+    //    Debug.Log(ItemType + " item " + delivery.Index + "deselected");
+    //    thisButton.colors = defaultColors;
+    //    uiManager.SelectPendingActiveItem(-1,ItemType); // Hide item actions panel
+    //}
 
-    public void OnSelect(BaseEventData data)
+    public void OnPointerClick(PointerEventData data)
     {
-        Debug.Log(ItemType + " item " + delivery.Index + " selected!");
-        thisButton.Select();
         thisButton.colors = selectedColors;
-        uiManager.SelectPendingActiveItem(delivery.Index, ItemType); // Show item actions panel
+        uiManager.SelectPendingActiveItem(delivery.DeliveryID, ItemType); // Show item actions panel
     }
 
 	void Start ()
@@ -56,7 +73,8 @@ public class PendingActiveItem : MonoBehaviour, IDeselectHandler, ISelectHandler
         thisButton = this.gameObject.GetComponent<Button>();
         defaultColors = thisButton.colors;
         selectedColors = defaultColors;
-        selectedColors.highlightedColor = new Color(0.78F, 1F, 0.78F, 1F);
+        selectedColors.normalColor = new Color(0.78F, 1F, 0.78F, 1F);
+        selectedColors.highlightedColor = new Color(0.9F, 1F, 0.9F, 1F);
 	}
 	
 	void Update () 
