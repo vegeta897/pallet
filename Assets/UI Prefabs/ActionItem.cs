@@ -10,16 +10,28 @@ public class ActionItem : MonoBehaviour, IDeselectHandler, IPointerClickHandler
     private ColorBlock defaultColors;
     private ColorBlock selectedColors;
     private Delivery delivery;
+    private UIManager uiManager;
+    public UIManager UIManager
+    {
+        get 
+        {
+            return uiManager;
+        }
+        set
+        {
+            uiManager = value;
+        }
+    }
     public Delivery Delivery
     {
         get
         {
-            return Delivery;
+            return delivery;
         }
         set
         {
             delivery = value;
-            TxtQuantity.text = delivery.Quantity.ToString();
+            TxtQuantity.text = delivery.Quantity.ToString(); // Update delivery quantity text
         }
     }
 
@@ -27,6 +39,7 @@ public class ActionItem : MonoBehaviour, IDeselectHandler, IPointerClickHandler
     {
         Debug.Log("action item " + delivery.Index + "deselected");
         thisButton.colors = defaultColors;
+        uiManager.SelectActionItem(-1); // Hide action item actions panel
     }
 
     public void OnPointerClick(PointerEventData data)
@@ -34,6 +47,7 @@ public class ActionItem : MonoBehaviour, IDeselectHandler, IPointerClickHandler
         Debug.Log("action item " + delivery.Index + " clicked!");
         thisButton.Select();
         thisButton.colors = selectedColors;
+        uiManager.SelectActionItem(delivery.Index); // Show action item actions panel
     }
 
 	void Start ()

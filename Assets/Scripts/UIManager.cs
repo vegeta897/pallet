@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 
-public class UIManager : MonoBehaviour 
+public class UIManager : MonoBehaviour
 {
 
     public Text TxtMoney;
@@ -16,37 +16,43 @@ public class UIManager : MonoBehaviour
     public InputField InpWage;
     public GameObject PanActionList;
     public GameObject PanActionItems;
-    public ActionItem PanActionItem;
+    public ActionItem BtnActionItem;
+    public ActionItemActions PanActionItemActions;
 
     private Warehouse warehouse;
 
     public void SetWage()
     {
-        warehouse.Wage = (decimal)Mathf.Round(float.Parse(InpWage.text)*100)/100;
+        warehouse.Wage = (decimal)Mathf.Round(float.Parse(InpWage.text) * 100) / 100;
         InpWage.text = warehouse.Wage.ToString("F2");
     }
 
     public void AddActionItem(Delivery newDelivery)
     {
-        ActionItem actionItem = Instantiate(PanActionItem) as ActionItem;
+        ActionItem actionItem = Instantiate(BtnActionItem) as ActionItem;
         actionItem.transform.SetParent(PanActionItems.transform, false);
         actionItem.Delivery = newDelivery;
+        actionItem.UIManager = this;
+    }
+    public void SelectActionItem(int index)
+    {
+        PanActionItemActions.gameObject.SetActive(index >= 0);
     }
 
-	void Start () 
+    void Start()
     {
         warehouse = FindObjectOfType<Warehouse>();
         foreach (Transform child in PanActionItems.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
-	}
+    }
 
     void Update()
     {
-         
+
     }
-	
+
     void LateUpdate()
     {
         TxtMoney.text = "$" + warehouse.Money.ToString("F2");
@@ -55,5 +61,5 @@ public class UIManager : MonoBehaviour
         TxtPaydayAmount.text = "Payday Cost: " + (warehouse.Workers * warehouse.Wage).ToString("F2");
         TxtStockAmount.text = "Stock Amount: " + warehouse.Stock;
         BtnFire.interactable = warehouse.Workers > 0;
-	}
+    }
 }
