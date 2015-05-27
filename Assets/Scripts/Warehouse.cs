@@ -93,7 +93,7 @@ public class Warehouse : MonoBehaviour
             Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
             newDelivery.Init(deliveries.Count, 25);
             deliveries.Add(newDelivery);
-            UIManager.AddActionItem(newDelivery);
+            UIManager.AddPendingItem(newDelivery);
         }
     }
 

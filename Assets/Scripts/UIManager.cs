@@ -14,10 +14,14 @@ public class UIManager : MonoBehaviour
     public Button BtnHire;
     public Button BtnFire;
     public InputField InpWage;
-    public GameObject PanActionList;
-    public GameObject PanActionItems;
-    public ActionItem BtnActionItem;
-    public ActionItemActions PanActionItemActions;
+    public GameObject PanPendingList;
+    public GameObject PanPendingItems;
+    public PendingActiveItem BtnPendingItem;
+    public GameObject PanActiveList;
+    public GameObject PanActiveItems;
+    public PendingActiveItem BtnActiveItem;
+    public PendingItemActions PanPendingItemActions;
+    public PendingItemActions PanActiveItemActions;
 
     private Warehouse warehouse;
 
@@ -27,25 +31,32 @@ public class UIManager : MonoBehaviour
         InpWage.text = warehouse.Wage.ToString("F2");
     }
 
-    public void AddActionItem(Delivery newDelivery)
+    public void AddPendingItem(Delivery newDelivery)
     {
-        ActionItem actionItem = Instantiate(BtnActionItem) as ActionItem;
-        actionItem.transform.SetParent(PanActionItems.transform, false);
+        PendingActiveItem actionItem = Instantiate(BtnPendingItem) as PendingActiveItem;
+        actionItem.transform.SetParent(PanPendingItems.transform, false);
         actionItem.Delivery = newDelivery;
+        actionItem.ItemType = "pending";
         actionItem.UIManager = this;
     }
-    public void SelectActionItem(int index)
+    public void SelectPendingActiveItem(int index, string itemType)
     {
-        PanActionItemActions.gameObject.SetActive(index >= 0);
+        PanPendingItemActions.gameObject.SetActive(index >= 0 && itemType == "pending");
+        PanActiveItemActions.gameObject.SetActive(index >= 0 && itemType == "active");
     }
 
     void Start()
     {
         warehouse = FindObjectOfType<Warehouse>();
-        foreach (Transform child in PanActionItems.transform)
+        foreach (Transform child in PanPendingItems.transform) // Remove editor placeholder
         {
             GameObject.Destroy(child.gameObject);
         }
+        foreach (Transform child in PanActiveItems.transform) // Remove editor placeholder
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        InpWage.textComponent.alignment = TextAnchor.MiddleRight;
     }
 
     void Update()

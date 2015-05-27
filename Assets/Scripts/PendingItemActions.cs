@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ActionItemActions : MonoBehaviour 
+public class PendingItemActions : MonoBehaviour 
 {
 
 	void Start () 
