@@ -13,6 +13,7 @@ public class Warehouse : MonoBehaviour
 
     public UIManager UIManager;
     public int LastDeliveryID = 0;
+    public int Tick;
 
     public decimal Money
     {
@@ -59,9 +60,12 @@ public class Warehouse : MonoBehaviour
         }
     }
 
-    public float PaydayInterval = 10f;
-    public float NextPayday;
-    private float DeliveryInterval = 5f;
+    // 1 tick = 1 second
+    // 1 hour = 2 ticks
+    // 1 day = 48 ticks
+    public static int PaydayInterval = 14 * 48; // 14 days
+    public int NextPayday;
+    private int DeliveryInterval = 5 * 48; // 5 days
 
     public void HireWorker()
     {
@@ -84,36 +88,34 @@ public class Warehouse : MonoBehaviour
         deliveries.Remove(id);
     }
 
-    IEnumerator PayDay(float interval)
+    IEnumerator DoTick()
     {
         while(true)
         {
-            yield return new WaitForSeconds(interval);
-            Debug.Log("payday!");
-            money -= workers * 50;
-            NextPayday = Time.time + PaydayInterval;
-        }
-    }
-
-    IEnumerator NewDelivery(float interval)
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(interval);
-            Debug.Log("new delivery request!");
-            Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
-            LastDeliveryID += 1;
-            newDelivery.Init(LastDeliveryID, Random.Range(1,8)*5);
-            deliveries[LastDeliveryID] = newDelivery;
-            UIManager.AddPendingItem(newDelivery);
+            yield return new WaitForSeconds(1f);
+            Tick += 1;
+            if (Tick % (PaydayInterval) == 0) // If it is payday
+            {
+                Debug.Log("payday!  " + "$" + (workers * 50).ToString("F2"));
+                money -= workers * 50;
+                NextPayday = Tick + PaydayInterval;
+            }
+            if (Tick % (DeliveryInterval) == 0 || Tick == 1) // Create an order on start
+            {
+                Debug.Log("new delivery request!");
+                Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
+                LastDeliveryID += 1;
+                newDelivery.Init(LastDeliveryID, Random.Range(1, 8) * 5);
+                deliveries[LastDeliveryID] = newDelivery;
+                UIManager.AddPendingItem(newDelivery);
+            }
         }
     }
 
 	void Start ()
     {
-        NextPayday = Time.time + PaydayInterval;
-        StartCoroutine(PayDay(PaydayInterval)); // Begin coroutines
-        StartCoroutine(NewDelivery(DeliveryInterval));
+        NextPayday = PaydayInterval;
+        StartCoroutine(DoTick()); // Begin ticking
 	}
 	
 	void Update ()

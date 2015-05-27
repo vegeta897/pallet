@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour
 {
 
+    public Text TxtTime;
+    public Text TxtTimeAMPM;
     public Text TxtMoney;
     public Text TxtWorkers;
     public Text TxtUntilPayday;
@@ -110,9 +112,12 @@ public class UIManager : MonoBehaviour
     {
         TxtMoney.text = "$" + warehouse.Money.ToString("F2");
         TxtWorkers.text = "Workers: " + warehouse.Workers;
-        TxtUntilPayday.text = "Next Payday: " + Mathf.CeilToInt(warehouse.NextPayday - Time.time);
-        TxtPaydayAmount.text = "Payday Cost: " + (warehouse.Workers * warehouse.Wage).ToString("F2");
+        TxtUntilPayday.text = "Next Payday: " + Mathf.CeilToInt((float)(warehouse.NextPayday - warehouse.Tick)/48f)+ " days";
+        TxtPaydayAmount.text = "Payday Cost: $" + (warehouse.Workers * warehouse.Wage).ToString("F2");
         TxtStockAmount.text = "Stock Amount: " + warehouse.Stock;
         BtnFire.interactable = warehouse.Workers > 0;
+        int hour = Mathf.FloorToInt(warehouse.Tick / 2) + 7; // Convert ticks to hours with +7 hour offset
+        TxtTime.text = (hour % 12 == 0 ? 12 : hour % 12) + ":00";
+        TxtTimeAMPM.text = hour % 24 > 11 ? "PM" : "AM";
     }
 }

@@ -204,12 +204,12 @@ RectTransform:
   - {fileID: 966260117}
   - {fileID: 1486137182}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 13
+  m_RootOrder: 15
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -50, y: 425}
+  m_AnchoredPosition: {x: -50, y: 25}
   m_SizeDelta: {x: 580, y: 400}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &53354995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,12 +309,12 @@ RectTransform:
   m_Children:
   - {fileID: 1147518356}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -135, y: -170}
+  m_AnchoredPosition: {x: -135, y: -130}
   m_SizeDelta: {x: 100, y: 30}
-  m_Pivot: {x: 1, y: 0}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &68334604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,12 +630,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -225}
-  m_SizeDelta: {x: 300, y: 37}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 50, y: -150}
+  m_SizeDelta: {x: 300, y: 30}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &189870044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -661,7 +661,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Payday Amount
+  m_Text: 'Payday Cost: $200'
 --- !u!222 &189870045
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -751,6 +751,10 @@ Prefab:
       propertyPath: m_Text
       value: 'Delivery #12'
       objectReference: {fileID: 0}
+    - target: {fileID: 11410724, guid: cec6fca03f438164e96441f34054c06f, type: 2}
+      propertyPath: m_FontData.m_FontSize
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cec6fca03f438164e96441f34054c06f, type: 2}
   m_IsPrefabParent: 0
@@ -785,12 +789,12 @@ RectTransform:
   - {fileID: 767653546}
   - {fileID: 1635057679}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -50, y: -170}
+  m_AnchoredPosition: {x: -50, y: -130}
   m_SizeDelta: {x: 75, y: 30}
-  m_Pivot: {x: 1, y: 0}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &244728947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -908,12 +912,12 @@ RectTransform:
   - {fileID: 1427951975}
   - {fileID: 145763920}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 12
+  m_RootOrder: 14
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -50, y: 480}
+  m_AnchoredPosition: {x: -50, y: 430}
   m_SizeDelta: {x: 580, y: 50}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &310561713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1176,7 +1180,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Time Until Payday
+  m_Text: 'Next Payday: 8 days'
 --- !u!222 &348571092
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1194,12 +1198,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -175}
-  m_SizeDelta: {x: 300, y: 37}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 50, y: -110}
+  m_SizeDelta: {x: 300, y: 30}
+  m_Pivot: {x: 0, y: 1}
 --- !u!1 &446364230
 GameObject:
   m_ObjectHideFlags: 0
@@ -1230,12 +1234,12 @@ RectTransform:
   m_Children:
   - {fileID: 2044742834}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -50, y: -125}
+  m_AnchoredPosition: {x: -50, y: -80}
   m_SizeDelta: {x: 185, y: 36}
-  m_Pivot: {x: 1, y: 0}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &446364232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1374,12 +1378,12 @@ RectTransform:
   - {fileID: 329608734}
   - {fileID: 1765698048}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 9
+  m_RootOrder: 11
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50, y: 480}
+  m_AnchoredPosition: {x: 50, y: 430}
   m_SizeDelta: {x: 580, y: 50}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &450030736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1612,12 +1616,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 8
+  m_RootOrder: 10
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -275}
-  m_SizeDelta: {x: 300, y: 37}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 50, y: -190}
+  m_SizeDelta: {x: 300, y: 30}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &742799027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1927,12 +1931,12 @@ RectTransform:
   m_Children:
   - {fileID: 1636323917}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -50, y: -75}
+  m_AnchoredPosition: {x: -50, y: -30}
   m_SizeDelta: {x: 185, y: 36}
-  m_Pivot: {x: 1, y: 0}
+  m_Pivot: {x: 1, y: 1}
 --- !u!1 &885879946
 GameObject:
   m_ObjectHideFlags: 0
@@ -1961,12 +1965,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -125}
-  m_SizeDelta: {x: 300, y: 37}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 50, y: -70}
+  m_SizeDelta: {x: 300, y: 30}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &885879949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1992,7 +1996,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Workers
+  m_Text: 'Workers: 2'
 --- !u!222 &885879950
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2041,7 +2045,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Money
+  m_Text: 'Money: $10000'
 --- !u!222 &897906323
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2059,12 +2063,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -75}
-  m_SizeDelta: {x: 300, y: 37}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 50, y: -30}
+  m_SizeDelta: {x: 300, y: 30}
+  m_Pivot: {x: 0, y: 1}
 --- !u!1 &966260116
 GameObject:
   m_ObjectHideFlags: 0
@@ -2300,6 +2304,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 1272146591}
+  - {fileID: 1946273127}
   - {fileID: 897906324}
   - {fileID: 885879947}
   - {fileID: 870092812}
@@ -2376,6 +2382,72 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!1 &1272146588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1272146591}
+  - 222: {fileID: 1272146590}
+  - 114: {fileID: 1272146589}
+  m_Layer: 5
+  m_Name: TxtTime
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1272146589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1272146588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: .784313738}
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 36
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 5
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 12:00
+--- !u!222 &1272146590
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1272146588}
+--- !u!224 &1272146591
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1272146588}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1254856084}
+  m_RootOrder: 0
+  m_AnchorMin: {x: .5, y: 1}
+  m_AnchorMax: {x: .5, y: 1}
+  m_AnchoredPosition: {x: -5, y: -20}
+  m_SizeDelta: {x: 107, y: 50}
+  m_Pivot: {x: 1, y: 1}
 --- !u!1 &1427951974
 GameObject:
   m_ObjectHideFlags: 0
@@ -2519,6 +2591,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c69efe1f2ab7341bb098529c09c615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TxtTime: {fileID: 1272146589}
+  TxtTimeAMPM: {fileID: 1946273128}
   TxtMoney: {fileID: 897906322}
   TxtWorkers: {fileID: 885879949}
   TxtUntilPayday: {fileID: 348571091}
@@ -2678,12 +2752,12 @@ RectTransform:
   m_Children:
   - {fileID: 1985338646}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 14
+  m_RootOrder: 16
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -25, y: 425}
+  m_AnchoredPosition: {x: -25, y: 25}
   m_SizeDelta: {x: 20, y: 400}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &1540088554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2786,7 +2860,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIManager: {fileID: 1468655327}
   LastDeliveryID: 0
-  PaydayInterval: 10
+  Tick: 0
   NextPayday: 0
 --- !u!4 &1592914153
 Transform:
@@ -3252,12 +3326,12 @@ RectTransform:
   - {fileID: 317255506}
   - {fileID: 814409215}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 10
+  m_RootOrder: 12
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50, y: 425}
+  m_AnchoredPosition: {x: 50, y: 25}
   m_SizeDelta: {x: 580, y: 400}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1837028418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3327,6 +3401,72 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!1 &1946273126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1946273127}
+  - 222: {fileID: 1946273129}
+  - 114: {fileID: 1946273128}
+  m_Layer: 5
+  m_Name: TxtTimeAMPM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1946273127
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1946273126}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1254856084}
+  m_RootOrder: 1
+  m_AnchorMin: {x: .5, y: 1}
+  m_AnchorMax: {x: .5, y: 1}
+  m_AnchoredPosition: {x: 5, y: -25}
+  m_SizeDelta: {x: 107, y: 50}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &1946273128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1946273126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: .674509823}
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 24
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 3
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: PM
+--- !u!222 &1946273129
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1946273126}
 --- !u!1 &1985338645
 GameObject:
   m_ObjectHideFlags: 0
@@ -3522,12 +3662,12 @@ RectTransform:
   m_Children:
   - {fileID: 1675550358}
   m_Father: {fileID: 1254856084}
-  m_RootOrder: 11
+  m_RootOrder: 13
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 635, y: 425}
+  m_AnchoredPosition: {x: 635, y: 25}
   m_SizeDelta: {x: 20, y: 400}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &2121840019
 MonoBehaviour:
   m_ObjectHideFlags: 0
