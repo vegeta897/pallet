@@ -14,6 +14,8 @@ public class Warehouse : MonoBehaviour
     public UIManager UIManager;
     public int LastDeliveryID = 0;
     public int Tick;
+    public int Timescale = 1;
+    public bool Paused = false;
 
     public decimal Money
     {
@@ -92,22 +94,25 @@ public class Warehouse : MonoBehaviour
     {
         while(true)
         {
-            yield return new WaitForSeconds(1f);
-            Tick += 1;
-            if (Tick % (PaydayInterval) == 0) // If it is payday
+            yield return new WaitForSeconds(1f/Timescale);
+            if(!Paused)
             {
-                Debug.Log("payday!  " + "$" + (workers * 50).ToString("F2"));
-                money -= workers * 50;
-                NextPayday = Tick + PaydayInterval;
-            }
-            if (Tick % (DeliveryInterval) == 0 || Tick == 1) // Create an order on start
-            {
-                Debug.Log("new delivery request!");
-                Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
-                LastDeliveryID += 1;
-                newDelivery.Init(LastDeliveryID, Random.Range(1, 8) * 5);
-                deliveries[LastDeliveryID] = newDelivery;
-                UIManager.AddPendingItem(newDelivery);
+                Tick += 1;
+                if(Tick % (PaydayInterval) == 0) // If it is payday
+                {
+                    Debug.Log("payday!  " + "$" + (workers * 50).ToString("F2"));
+                    money -= workers * 50;
+                    NextPayday = Tick + PaydayInterval;
+                }
+                if(Tick % (DeliveryInterval) == 0 || Tick == 1) // Create an order on start
+                {
+                    Debug.Log("new delivery request!");
+                    Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
+                    LastDeliveryID += 1;
+                    newDelivery.Init(LastDeliveryID, Random.Range(1, 8) * 5);
+                    deliveries[LastDeliveryID] = newDelivery;
+                    UIManager.AddPendingItem(newDelivery);
+                }
             }
         }
     }

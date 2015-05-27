@@ -7,8 +7,14 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour
 {
 
+    public Warehouse Warehouse;
     public Text TxtTime;
     public Text TxtTimeAMPM;
+    public Button BtnPause;
+    public Button Btn1x;
+    public Button Btn2x;
+    public Button Btn4x;
+    public Button Btn8x;
     public Text TxtMoney;
     public Text TxtWorkers;
     public Text TxtUntilPayday;
@@ -26,16 +32,45 @@ public class UIManager : MonoBehaviour
     public PendingItemActions PanPendingItemActions;
     public PendingItemActions PanActiveItemActions;
 
-    private Warehouse warehouse;
     private int selectedPendingID;
     private int selectedActiveID;
     private Dictionary<int, PendingActiveItem> pendingItems = new Dictionary<int, PendingActiveItem>();
     private Dictionary<int, PendingActiveItem> activeItems = new Dictionary<int, PendingActiveItem>();
 
+    public void SetTimescale(int multi)
+    {
+        Warehouse.Timescale = multi;
+        Btn1x.Highlight(false);
+        Btn2x.Highlight(false);
+        Btn4x.Highlight(false);
+        Btn8x.Highlight(false);
+        switch (multi)
+        {
+            case 1:
+                Btn1x.Highlight();
+                break;
+            case 2:
+                Btn2x.Highlight();
+                break;
+            case 4:
+                Btn4x.Highlight();
+                break;
+            case 8:
+                Btn8x.Highlight();
+                break;
+        }
+    }
+
+    public void Pause()
+    {
+        Warehouse.Paused = !Warehouse.Paused;
+        BtnPause.Highlight(Warehouse.Paused);
+    }
+
     public void SetWage()
     {
-        warehouse.Wage = (decimal)Mathf.Round(float.Parse(InpWage.text) * 100) / 100;
-        InpWage.text = warehouse.Wage.ToString("F2");
+        Warehouse.Wage = (decimal)Mathf.Round(float.Parse(InpWage.text) * 100) / 100;
+        InpWage.text = Warehouse.Wage.ToString("F2");
     }
 
     public void AddPendingItem(Delivery newDelivery)
@@ -69,7 +104,7 @@ public class UIManager : MonoBehaviour
     public void AcceptDelivery()
     {
         PanPendingItemActions.gameObject.SetActive(false);
-        warehouse.AcceptDelivery(selectedPendingID);
+        Warehouse.AcceptDelivery(selectedPendingID);
         PendingActiveItem activeItem = Instantiate(BtnActiveItem) as PendingActiveItem;
         activeItem.transform.SetParent(PanActiveItems.transform, false);
         activeItem.Delivery = pendingItems[selectedPendingID].Delivery;
@@ -83,7 +118,7 @@ public class UIManager : MonoBehaviour
     public void RejectDelivery()
     {
         PanPendingItemActions.gameObject.SetActive(false);
-        warehouse.RejectDelivery(selectedPendingID);
+        Warehouse.RejectDelivery(selectedPendingID);
         GameObject.Destroy(pendingItems[selectedPendingID].gameObject);
         pendingItems.Remove(selectedPendingID);
         selectedPendingID = -1;
@@ -91,7 +126,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        warehouse = FindObjectOfType<Warehouse>();
+        Btn1x.Highlight();
         foreach (Transform child in PanPendingItems.transform) // Remove editor placeholder
         {
             GameObject.Destroy(child.gameObject);
@@ -101,6 +136,11 @@ public class UIManager : MonoBehaviour
             GameObject.Destroy(child.gameObject);
         }
         InpWage.textComponent.alignment = TextAnchor.MiddleRight;
+        BtnPause.onClick.AddListener(() => Pause());
+        Btn1x.onClick.AddListener(() => SetTimescale(1));
+        Btn2x.onClick.AddListener(() => SetTimescale(2));
+        Btn4x.onClick.AddListener(() => SetTimescale(4));
+        Btn8x.onClick.AddListener(() => SetTimescale(8));
     }
 
     void Update()
@@ -110,13 +150,13 @@ public class UIManager : MonoBehaviour
 
     void LateUpdate()
     {
-        TxtMoney.text = "$" + warehouse.Money.ToString("F2");
-        TxtWorkers.text = "Workers: " + warehouse.Workers;
-        TxtUntilPayday.text = "Next Payday: " + Mathf.CeilToInt((float)(warehouse.NextPayday - warehouse.Tick)/48f)+ " days";
-        TxtPaydayAmount.text = "Payday Cost: $" + (warehouse.Workers * warehouse.Wage).ToString("F2");
-        TxtStockAmount.text = "Stock Amount: " + warehouse.Stock;
-        BtnFire.interactable = warehouse.Workers > 0;
-        int hour = Mathf.FloorToInt(warehouse.Tick / 2) + 7; // Convert ticks to hours with +7 hour offset
+        TxtMoney.text = "$" + Warehouse.Money.ToString("F2");
+        TxtWorkers.text = "Workers: " + Warehouse.Workers;
+        TxtUntilPayday.text = "Next Payday: " + Mathf.CeilToInt((float)(Warehouse.NextPayday - Warehouse.Tick)/48f)+ " days";
+        TxtPaydayAmount.text = "Payday Cost: $" + (Warehouse.Workers * Warehouse.Wage).ToString("F2");
+        TxtStockAmount.text = "Stock Count: " + Warehouse.Stock;
+        BtnFire.interactable = Warehouse.Workers > 0;
+        int hour = Mathf.FloorToInt(Warehouse.Tick / 2) + 7; // Convert ticks to hours with +7 hour offset
         TxtTime.text = (hour % 12 == 0 ? 12 : hour % 12) + ":00";
         TxtTimeAMPM.text = hour % 24 > 11 ? "PM" : "AM";
     }
