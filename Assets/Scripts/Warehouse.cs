@@ -59,11 +59,11 @@ public class Warehouse : MonoBehaviour
         }
     }
 
-    public float NextPayday = 10f;
+    public float PaydayInterval = 10f;
+    public float NextPayday;
+    private float DeliveryInterval = 5f;
 
-    private float nextDelivery = 2f;
-
-    public void HireWorker ()
+    public void HireWorker()
     {
         workers += 1;
     }
@@ -73,28 +73,38 @@ public class Warehouse : MonoBehaviour
         workers -= workers == 0 ? 0 : 1;
     }
 
-    IEnumerator PayDay()
+    IEnumerator PayDay(float interval)
     {
-        money -= workers * 50;
-        yield return new WaitForSeconds(NextPayday);
+        while(true)
+        {
+            yield return new WaitForSeconds(interval);
+            Debug.Log("payday!");
+            money -= workers * 50;
+            NextPayday = Time.time + PaydayInterval;
+        }
     }
 
-    IEnumerator NewDelivery()
+    IEnumerator NewDelivery(float interval)
     {
-        Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
-        newDelivery.Init(deliveries.Count, 25);
-        deliveries.Add(newDelivery);
-        UIManager.AddActionItem(newDelivery);
-        yield return new WaitForSeconds(nextDelivery);
+        while(true)
+        {
+            yield return new WaitForSeconds(interval);
+            Debug.Log("new delivery request!");
+            Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
+            newDelivery.Init(deliveries.Count, 25);
+            deliveries.Add(newDelivery);
+            UIManager.AddActionItem(newDelivery);
+        }
     }
 
-	void Start () 
+	void Start ()
     {
-        PayDay(); // Begin coroutines
-        NewDelivery();
+        NextPayday = Time.time + PaydayInterval;
+        StartCoroutine(PayDay(PaydayInterval)); // Begin coroutines
+        StartCoroutine(NewDelivery(DeliveryInterval));
 	}
 	
-	void Update () 
+	void Update ()
     {
 
 	}

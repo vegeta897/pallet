@@ -1821,7 +1821,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManager: {fileID: 1468655327}
-  NextPayday: 10
+  PaydayInterval: 10
+  NextPayday: 0
 --- !u!4 &1592914153
 Transform:
   m_ObjectHideFlags: 0
