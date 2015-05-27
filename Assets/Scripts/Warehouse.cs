@@ -59,11 +59,9 @@ public class Warehouse : MonoBehaviour
         }
     }
 
-    public float NextPayday = 10f; 
-    private float paydayPeriod = 10f;
+    public float NextPayday = 10f;
 
     private float nextDelivery = 2f;
-    private float deliveryPeriod = 4f;
 
     public void HireWorker ()
     {
@@ -75,26 +73,30 @@ public class Warehouse : MonoBehaviour
         workers -= workers == 0 ? 0 : 1;
     }
 
+    IEnumerator PayDay()
+    {
+        money -= workers * 50;
+        yield return new WaitForSeconds(NextPayday);
+    }
+
+    IEnumerator NewDelivery()
+    {
+        Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
+        newDelivery.Init(deliveries.Count, 25);
+        deliveries.Add(newDelivery);
+        UIManager.AddActionItem(newDelivery);
+        yield return new WaitForSeconds(nextDelivery);
+    }
+
 	void Start () 
     {
-
+        PayDay(); // Begin coroutines
+        NewDelivery();
 	}
 	
 	void Update () 
     {
-        if (Time.time > NextPayday) 
-         {
-             NextPayday = Time.time + paydayPeriod;
-             money -= workers * 50;
-         }
-        if (Time.time > nextDelivery)
-        {
-            nextDelivery = Time.time + deliveryPeriod;
-            Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
-            newDelivery.Init(deliveries.Count, 25);
-            deliveries.Add(newDelivery);
-            UIManager.AddActionItem(newDelivery);
-        }
+
 	}
 
     void LateUpdate ()
