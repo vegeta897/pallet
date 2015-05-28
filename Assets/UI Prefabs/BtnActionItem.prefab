@@ -15,7 +15,7 @@ GameObject:
   - 114: {fileID: 11456266}
   - 114: {fileID: 11473092}
   m_Layer: 5
-  m_Name: BtnActiveItem
+  m_Name: BtnActionItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,7 +49,7 @@ GameObject:
   - 222: {fileID: 22207230}
   - 114: {fileID: 11410724}
   m_Layer: 5
-  m_Name: TxtActiveItemDesc
+  m_Name: TxtDesc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +66,7 @@ GameObject:
   - 222: {fileID: 22235916}
   - 114: {fileID: 11472388}
   m_Layer: 5
-  m_Name: TxtActiveItemQty
+  m_Name: TxtQty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,7 +83,7 @@ GameObject:
   - 222: {fileID: 22230522}
   - 114: {fileID: 11408010}
   m_Layer: 5
-  m_Name: TxtActiveItemTitle
+  m_Name: TxtTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,7 +100,7 @@ GameObject:
   - 222: {fileID: 22273752}
   - 114: {fileID: 11490714}
   m_Layer: 5
-  m_Name: TxtActiveItemQtyDesc
+  m_Name: TxtQtyDesc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,7 +151,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Delivery #12'
+  m_Text: 'Delivery #<b>12</b>'
 --- !u!114 &11410724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -177,7 +177,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: The distributor is sending stock to you
+  m_Text: Arrives in <b>36</b> hours
 --- !u!114 &11426096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -269,9 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cefc42a070926274b8464573d16d43fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemType: active
-  TxtPendingTitle: {fileID: 0}
-  TxtActiveTitle: {fileID: 11408010}
+  TxtTitle: {fileID: 11408010}
   TxtDescription: {fileID: 11410724}
   TxtQuantity: {fileID: 11472388}
   ImgProgress: {fileID: 11406646}

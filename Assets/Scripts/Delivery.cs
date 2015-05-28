@@ -1,70 +1,58 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Delivery : ScriptableObject 
+public class Delivery : ActionItem 
 {
-    private bool accepted;
     private float acceptTime;
-    private bool delivered;
-    private bool unloading;
-    private int unloaded;
-    private bool complete;
+    private int qtyUnloaded;
+    private string status = "new";
 
-    public int Quantity;
-    public int DeliveryID;
+    public new string Type = "order";
     public int DeliveryTime;
-    public bool Accepted
+    public override string Status
     {
         get
         {
-            return accepted;
+            return status;
         }
         set
         {
-            accepted = value;
-            DeliveryTime = 60; // 1 day
-            acceptTime = Time.time;
+            status = value;
+            switch (status)
+            {
+                case "accepted":
+                    DeliveryTime = 60; // 1 day
+                    acceptTime = Time.time;
+                    break;
+                case "delivering":
+                    // TODO: Deliver at next available time, store delivery departure time
+                    break;
+                case "delivered":
+
+                    break;
+                case "unloading":
+
+                    break;
+            }
         }
     }
-    public bool Delivered
+    public int QtyUnloaded
     {
         get
         {
-            return delivered;
+            return qtyUnloaded;
         }
         set
         {
-            delivered = value;
-        }
-    }
-    public bool Unloading
-    {
-        get
-        {
-            return unloading;
-        }
-        set
-        {
-            unloading = value;
-        }
-    }
-    public int Unloaded
-    {
-        get
-        {
-            return unloaded;
-        }
-        set
-        {
-            unloaded = value;
-            if(unloaded >= Quantity)
+            qtyUnloaded = value;
+            if(qtyUnloaded >= Quantity)
             {
                 ScriptableObject.Destroy(this);
             }
         }
     }
 
-    public float TimeRemaining()
+    public override float TimeRemaining()
     {
         return acceptTime + DeliveryTime - Time.time;
     }
@@ -72,16 +60,6 @@ public class Delivery : ScriptableObject
     public void Init(int id, int qty)
     {
         Quantity = qty;
-        DeliveryID = id;
+        ID = id;
     }
-
-	void Start () 
-    {
-	    
-	}
-	
-	void Update () 
-    {
-	    
-	}
 }

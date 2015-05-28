@@ -25,17 +25,16 @@ public class UIManager : MonoBehaviour
     public InputField InpWage;
     public GameObject PanPendingList;
     public GameObject PanPendingItems;
-    public PendingActiveItem BtnPendingItem;
+    public BtnActionItem BtnActionItem;
     public GameObject PanActiveList;
     public GameObject PanActiveItems;
-    public PendingActiveItem BtnActiveItem;
+    public BtnActionItem BtnActiveItem;
     public PendingActiveActions PanPendingItemActions;
     public PendingActiveActions PanActiveItemActions;
 
-    private int selectedPendingID;
-    private int selectedActiveID;
-    private Dictionary<int, PendingActiveItem> pendingItems = new Dictionary<int, PendingActiveItem>();
-    private Dictionary<int, PendingActiveItem> activeItems = new Dictionary<int, PendingActiveItem>();
+    private BtnActionItem selectedPendingItem;
+    private BtnActionItem selectedActiveItem;
+    private Dictionary<ActionItem, BtnActionItem> actionItems = new Dictionary<ActionItem, BtnActionItem>();
 
     public void SetTimescale(int multi)
     {
@@ -71,84 +70,72 @@ public class UIManager : MonoBehaviour
         InpWage.text = Warehouse.Wage.ToString("F2");
     }
 
-    public void AddPendingItem(Delivery newDelivery)
+    public void AddItem(ActionItem newActionItem)
     {
-        PendingActiveItem pendingItem = Instantiate(BtnPendingItem) as PendingActiveItem;
-        pendingItem.transform.SetParent(PanPendingItems.transform, false);
-        pendingItem.Delivery = newDelivery;
-        pendingItem.ItemType = "pending";
-        pendingItem.UIManager = this;
-        pendingItems[newDelivery.DeliveryID] = pendingItem;
+        BtnActionItem newBtnActionItem = Instantiate(BtnActionItem) as BtnActionItem;
+        newBtnActionItem.transform.SetParent(PanPendingItems.transform, false);
+        newBtnActionItem.Item = newActionItem;
+        newBtnActionItem.UIManager = this;
+        actionItems[newActionItem] = newBtnActionItem;
     }
 
-    public void SelectItem(PendingActiveItem item)
+    public void SelectItem(BtnActionItem item)
     {
-        if(item.ItemType == "pending")
+        if(item.Item.Status == "new")
         {
-            selectedPendingID = item.Delivery.DeliveryID;
-            PanPendingItemActions.Item = item;
+            selectedPendingItem = item;
+            PanPendingItemActions.BtnItem = item;
         }
         else
         {
-            selectedActiveID = item.Delivery.DeliveryID;
-            PanActiveItemActions.Item = item;
+            selectedActiveItem = item;
+            PanActiveItemActions.BtnItem = item;
         }
-        foreach (KeyValuePair<int, PendingActiveItem> listItem in (item.ItemType == "pending" ? pendingItems : activeItems))
+        foreach(KeyValuePair<ActionItem, BtnActionItem> entry in actionItems)
         {
-            listItem.Value.Selected = listItem.Key == item.Delivery.DeliveryID;
+            entry.Value.Selected = entry.Value == selectedPendingItem || entry.Value == selectedActiveItem;
         }
     }
 
-    public void AcceptDelivery()
+    public void AcceptItem(ActionItem item)
     {
-        Warehouse.AcceptDelivery(selectedPendingID);
-        PendingActiveItem activeItem = Instantiate(BtnActiveItem) as PendingActiveItem;
+        BtnActionItem activeItem = Instantiate(BtnActiveItem) as BtnActionItem;
         activeItem.transform.SetParent(PanActiveItems.transform, false);
-        activeItem.Delivery = pendingItems[selectedPendingID].Delivery;
-        activeItem.ItemType = "active";
+        activeItem.Item = item;
         activeItem.UIManager = this;
-        activeItems[selectedPendingID] = activeItem;
-        GameObject.Destroy(pendingItems[selectedPendingID].gameObject);
-        pendingItems.Remove(selectedPendingID);
-        selectedPendingID = -1;
+        GameObject.Destroy(actionItems[item].gameObject);
+        actionItems[item] = activeItem;
+        selectedPendingItem = null;
+        Warehouse.AcceptItem(item);
     }
 
-    public void RejectDelivery()
+    public void RejectItem()
     {
-        RemoveItem(selectedPendingID);
+        RemoveItem(selectedPendingItem.Item);
     }
 
-    public void RemoveItem(int itemID)
+    public void RemoveItem(ActionItem item)
     {
-        Warehouse.RemoveItem(itemID);
-        if(pendingItems.ContainsKey(itemID))
+        Warehouse.RemoveItem(item);
+        GameObject.Destroy(actionItems[item].gameObject);
+        if(item.Status == "new")
         {
-            GameObject.Destroy(pendingItems[itemID].gameObject);
-            PanPendingItemActions.Item = null;
-            pendingItems.Remove(itemID);
+            PanPendingItemActions.BtnItem = null;
         }
-        if(activeItems.ContainsKey(itemID))
+        else if(selectedActiveItem == actionItems[item])
         {
-            GameObject.Destroy(activeItems[itemID].gameObject);
-            PanActiveItemActions.Item = null;
-            activeItems.Remove(itemID);
+            PanActiveItemActions.BtnItem = null;
         }
-        selectedPendingID = selectedPendingID == itemID ? -1 : selectedPendingID;
-        selectedActiveID = selectedActiveID == itemID ? -1 : selectedActiveID;
-
+        actionItems.Remove(item);
     }
 
     public void Click(BaseEventData data)
     {
-        PanPendingItemActions.Item = null;
-        PanActiveItemActions.Item = null;
-        selectedPendingID = -1;
-        selectedActiveID = -1;
-        foreach (KeyValuePair<int, PendingActiveItem> item in pendingItems)
-        {
-            item.Value.Selected = false;
-        }
-        foreach (KeyValuePair<int, PendingActiveItem> item in activeItems)
+        PanPendingItemActions.BtnItem = null;
+        PanActiveItemActions.BtnItem = null;
+        selectedPendingItem = null;
+        selectedActiveItem = null;
+        foreach (KeyValuePair<ActionItem, BtnActionItem> item in actionItems)
         {
             item.Value.Selected = false;
         }
@@ -184,7 +171,7 @@ public class UIManager : MonoBehaviour
     {
         TxtMoney.text = "<b>$" + Warehouse.Money.ToString("F2") + "</b>";
         TxtWorkers.text = "Workers: <b>" + Warehouse.Workers + "</b>";
-        TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Time.time) / 48f) + " days</b>";
+        TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Time.time) / 64f) + " days</b>";
         TxtPaydayAmount.text = "Payday Cost: <b>$" + (Warehouse.Workers * Warehouse.Wage).ToString("F2") + "</b>";
         TxtStockAmount.text = "Stock Count: <b>" + Warehouse.Stock + "</b>";
         BtnFire.interactable = Warehouse.Workers > 0;
