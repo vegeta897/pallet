@@ -13,9 +13,7 @@ public class Warehouse : MonoBehaviour
 
     public UIManager UIManager;
     public int LastDeliveryID = 0;
-    public int Tick;
-    public int Timescale = 1;
-    public bool Paused = false;
+    public float Timescale = 1;
 
     public decimal Money
     {
@@ -62,12 +60,11 @@ public class Warehouse : MonoBehaviour
         }
     }
 
-    // 1 tick = 1 second
-    // 1 hour = 2 ticks
-    // 1 day = 48 ticks
-    public static int PaydayInterval = 14 * 48; // 14 days
+    // 1 hour = 2.5 seconds
+    // 1 day = 60 seconds
+    public static int PaydayInterval = 14 * 60; // 14 days
     public int NextPayday;
-    private int DeliveryInterval = 5 * 48; // 5 days
+    private int DeliveryInterval = 5 * 60; // 5 days
 
     public void HireWorker()
     {
@@ -94,17 +91,16 @@ public class Warehouse : MonoBehaviour
     {
         while(true)
         {
-            yield return new WaitForSeconds(1f/Timescale);
-            if(!Paused)
+            yield return new WaitForSeconds(1f);
             {
-                Tick += 1;
-                if(Tick % (PaydayInterval) == 0) // If it is payday
+                int seconds = Mathf.FloorToInt(Time.time);
+                if (seconds % (PaydayInterval) == 0) // If it is payday
                 {
                     Debug.Log("payday!  " + "$" + (workers * 50).ToString("F2"));
                     money -= workers * 50;
-                    NextPayday = Tick + PaydayInterval;
+                    NextPayday = seconds + PaydayInterval;
                 }
-                if(Tick % (DeliveryInterval) == 0 || Tick == 1) // Create an order on start
+                if (seconds % (DeliveryInterval) == 0 || seconds == 1) // Create an order on start
                 {
                     Debug.Log("new delivery request!");
                     Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;

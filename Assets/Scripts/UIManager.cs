@@ -39,13 +39,17 @@ public class UIManager : MonoBehaviour
 
     public void SetTimescale(int multi)
     {
-        Warehouse.Timescale = multi;
+        Time.timeScale = multi;
+        BtnPause.Highlight(false);
         Btn1x.Highlight(false);
         Btn2x.Highlight(false);
         Btn4x.Highlight(false);
         Btn8x.Highlight(false);
         switch (multi)
         {
+            case 0:
+                BtnPause.Highlight();
+                break;
             case 1:
                 Btn1x.Highlight();
                 break;
@@ -59,12 +63,6 @@ public class UIManager : MonoBehaviour
                 Btn8x.Highlight();
                 break;
         }
-    }
-
-    public void Pause()
-    {
-        Warehouse.Paused = !Warehouse.Paused;
-        BtnPause.Highlight(Warehouse.Paused);
     }
 
     public void SetWage()
@@ -124,8 +122,31 @@ public class UIManager : MonoBehaviour
         selectedPendingID = -1;
     }
 
+    public void Click(BaseEventData data)
+    {
+        PanPendingItemActions.gameObject.SetActive(false);
+        PanActiveItemActions.gameObject.SetActive(false);
+        selectedPendingID = -1;
+        selectedActiveID = -1;
+        foreach (KeyValuePair<int, PendingActiveItem> item in pendingItems)
+        {
+            item.Value.Selected = false;
+        }
+        foreach (KeyValuePair<int, PendingActiveItem> item in activeItems)
+        {
+            item.Value.Selected = false;
+        }
+    }
+
     void Start()
     {
+        
+
+        BtnPause.onClick.AddListener(() => SetTimescale(0));
+        Btn1x.onClick.AddListener(() => SetTimescale(1));
+        Btn2x.onClick.AddListener(() => SetTimescale(2));
+        Btn4x.onClick.AddListener(() => SetTimescale(4));
+        Btn8x.onClick.AddListener(() => SetTimescale(8));
         Btn1x.Highlight();
         foreach (Transform child in PanPendingItems.transform) // Remove editor placeholder
         {
@@ -136,11 +157,6 @@ public class UIManager : MonoBehaviour
             GameObject.Destroy(child.gameObject);
         }
         InpWage.textComponent.alignment = TextAnchor.MiddleRight;
-        BtnPause.onClick.AddListener(() => Pause());
-        Btn1x.onClick.AddListener(() => SetTimescale(1));
-        Btn2x.onClick.AddListener(() => SetTimescale(2));
-        Btn4x.onClick.AddListener(() => SetTimescale(4));
-        Btn8x.onClick.AddListener(() => SetTimescale(8));
     }
 
     void Update()
@@ -150,13 +166,13 @@ public class UIManager : MonoBehaviour
 
     void LateUpdate()
     {
-        TxtMoney.text = "$" + Warehouse.Money.ToString("F2");
-        TxtWorkers.text = "Workers: " + Warehouse.Workers;
-        TxtUntilPayday.text = "Next Payday: " + Mathf.CeilToInt((float)(Warehouse.NextPayday - Warehouse.Tick)/48f)+ " days";
-        TxtPaydayAmount.text = "Payday Cost: $" + (Warehouse.Workers * Warehouse.Wage).ToString("F2");
-        TxtStockAmount.text = "Stock Count: " + Warehouse.Stock;
+        TxtMoney.text = "<b>$" + Warehouse.Money.ToString("F2") + "</b>";
+        TxtWorkers.text = "Workers: <b>" + Warehouse.Workers + "</b>";
+        TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Time.time) / 48f) + " days</b>";
+        TxtPaydayAmount.text = "Payday Cost: <b>$" + (Warehouse.Workers * Warehouse.Wage).ToString("F2") + "</b>";
+        TxtStockAmount.text = "Stock Count: <b>" + Warehouse.Stock + "</b>";
         BtnFire.interactable = Warehouse.Workers > 0;
-        int hour = Mathf.FloorToInt(Warehouse.Tick / 2) + 7; // Convert ticks to hours with +7 hour offset
+        int hour = Mathf.FloorToInt(Time.time / 2.5f) + 7; // Convert ticks to hours with +7 hour offset
         TxtTime.text = (hour % 12 == 0 ? 12 : hour % 12) + ":00";
         TxtTimeAMPM.text = hour % 24 > 11 ? "PM" : "AM";
     }

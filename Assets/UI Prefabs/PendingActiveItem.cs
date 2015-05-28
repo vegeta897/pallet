@@ -8,13 +8,17 @@ public class PendingActiveItem : MonoBehaviour, IPointerClickHandler
     public string ItemType;
     public Text TxtPendingTitle;
     public Text TxtActiveTitle;
+    public Text TxtDescription;
     public Text TxtQuantity;
+    public RawImage ImgProgress;
+
     private Button thisButton;
     private ColorBlock defaultColors;
     private ColorBlock selectedColors;
     private Delivery delivery;
     private UIManager uiManager;
     private bool selected;
+
     public UIManager UIManager
     {
         get 
@@ -38,7 +42,7 @@ public class PendingActiveItem : MonoBehaviour, IPointerClickHandler
             TxtQuantity.text = delivery.Quantity.ToString(); // Update delivery quantity text
             if(delivery.Accepted)
             {
-                TxtActiveTitle.text = "Delivery #" + delivery.DeliveryID;
+                TxtActiveTitle.text = "Delivery #<b>" + delivery.DeliveryID + "</b>";
             }
         }
     }
@@ -79,6 +83,14 @@ public class PendingActiveItem : MonoBehaviour, IPointerClickHandler
 	
 	void Update () 
     {
-	    
+
 	}
+    void LateUpdate()
+    {
+        if(delivery.Accepted)
+        {
+            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (Delivery.DeliveryTime - Delivery.TimeRemaining()) / Delivery.DeliveryTime));
+            TxtDescription.text = "Arrives in <b>" + Mathf.CeilToInt(Delivery.TimeRemaining() / 2.5f) + "</b> hours";
+        }
+    }
 }

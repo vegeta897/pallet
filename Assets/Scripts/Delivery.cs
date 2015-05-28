@@ -4,10 +4,11 @@ using System.Collections;
 public class Delivery : ScriptableObject 
 {
     private bool accepted;
+    private float acceptTime;
 
     public int Quantity;
     public int DeliveryID;
-    public float DeliveryTime;
+    public int DeliveryTime;
     public bool Accepted
     {
         get
@@ -17,8 +18,14 @@ public class Delivery : ScriptableObject
         set
         {
             accepted = value;
-            DeliveryTime = Time.time + 30f;
+            DeliveryTime = 180; // 3 days
+            acceptTime = Time.time;
         }
+    }
+
+    public float TimeRemaining()
+    {
+        return acceptTime + DeliveryTime - Time.time;
     }
 
     public void Init(int id, int qty)

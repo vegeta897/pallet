@@ -216,7 +216,9 @@ MonoBehaviour:
   ItemType: pending
   TxtPendingTitle: {fileID: 11455086}
   TxtActiveTitle: {fileID: 0}
+  TxtDescription: {fileID: 11438910}
   TxtQuantity: {fileID: 11411036}
+  ImgProgress: {fileID: 0}
 --- !u!114 &11438910
 MonoBehaviour:
   m_ObjectHideFlags: 1
