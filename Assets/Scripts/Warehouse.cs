@@ -89,6 +89,11 @@ public class Warehouse : MonoBehaviour
         actionItems.Remove(item);
     }
 
+    public int Hour() // Returns 0-23 on 24-hour clock, +7 hour offset
+    {
+        return (Mathf.FloorToInt(Time.time / 2.5f) + 7) % 24;
+    }
+
     IEnumerator DoTick()
     {
         while(true)
@@ -129,11 +134,15 @@ public class Warehouse : MonoBehaviour
                     if(item.Type == "delivery")
                     {
                         Delivery d = item as Delivery;
-                        if (item.Status == "accepted" && item.TimeRemaining() <= 0)
+                        if (item.Status == "accepted" && Hour() < 17 && Hour() > 4) // Delivers between 5AM - 4PM
+                        {
+                            item.Status = "delivering";
+                        }
+                        else if (item.Status == "delivering" && item.TimeRemaining() <= 0)
                         {
                             item.Status = "delivered";
                         }
-                        if(item.Status == "unloading")
+                        else if(item.Status == "unloading")
                         {
                             int stockUnloaded = Mathf.Min((item.Quantity - d.QtyUnloaded), workers - busyWorkers);
                             stock += stockUnloaded;
@@ -151,6 +160,7 @@ public class Warehouse : MonoBehaviour
                         Order o = item as Order;
                         if(item.Status == "picking")
                         {
+                            // TODO: Prevent picking from 0 inventory
                             int stockPicked = Mathf.Min((item.Quantity - o.QtyPicked), workers - busyWorkers);
                             o.QtyPicked += stockPicked;
                             busyWorkers += stockPicked;
@@ -159,7 +169,7 @@ public class Warehouse : MonoBehaviour
                                 item.Status = "picked";
                             }
                         }
-                        if (item.Status == "loading")
+                        else if (item.Status == "loading")
                         {
                             int stockLoaded = Mathf.Min((item.Quantity - o.QtyLoaded), workers - busyWorkers);
                             o.QtyLoaded += stockLoaded;
@@ -169,7 +179,7 @@ public class Warehouse : MonoBehaviour
                                 item.Status = "loaded";
                             }
                         }
-                        if (item.Status == "shipping" && item.TimeRemaining() <= 0)
+                        else if (item.Status == "shipping" && item.TimeRemaining() <= 0)
                         {
                             money += item.Quantity * 25;
                             UIManager.RemoveItem(item);

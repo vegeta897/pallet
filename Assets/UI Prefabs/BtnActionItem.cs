@@ -88,6 +88,10 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
         ImgProgress.gameObject.SetActive(false);
         if(item.Type == "delivery" && item.Status == "accepted")
         {
+            TxtDescription.text = "Delivery will depart in the morning";
+        }
+        if (item.Status == "delivering")
+        {
             Delivery d = item as Delivery;
             ImgProgress.gameObject.SetActive(true);
             ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (d.DeliveryTime - d.TimeRemaining()) / d.DeliveryTime));

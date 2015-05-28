@@ -4,6 +4,7 @@ using System.Collections;
 public class Delivery : ActionItem 
 {
     private float acceptTime;
+    private float deliveryDepartTime;
     private int qtyUnloaded;
     private string status = "new";
 
@@ -21,11 +22,11 @@ public class Delivery : ActionItem
             switch (status)
             {
                 case "accepted":
-                    DeliveryTime = 60; // 1 day
                     acceptTime = Time.time;
                     break;
                 case "delivering":
-                    // TODO: Deliver at next available time, store delivery departure time
+                    DeliveryTime = 60; // 1 day
+                    deliveryDepartTime = Time.time;
                     break;
                 case "delivered":
 
@@ -54,7 +55,7 @@ public class Delivery : ActionItem
 
     public override float TimeRemaining()
     {
-        return acceptTime + DeliveryTime - Time.time;
+        return deliveryDepartTime + DeliveryTime - Time.time;
     }
 
     public void Init(int id, int qty)

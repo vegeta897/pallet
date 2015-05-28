@@ -175,8 +175,7 @@ public class UIManager : MonoBehaviour
         TxtPaydayAmount.text = "Payday Cost: <b>$" + (Warehouse.Workers * Warehouse.Wage).ToString("F2") + "</b>";
         TxtStockAmount.text = "Stock Count: <b>" + Warehouse.Stock + "</b>";
         BtnFire.interactable = Warehouse.Workers > 0;
-        int hour = Mathf.FloorToInt(Time.time / 2.5f) + 7; // Convert ticks to hours with +7 hour offset
-        TxtTime.text = (hour % 12 == 0 ? 12 : hour % 12) + ":00";
-        TxtTimeAMPM.text = hour % 24 > 11 ? "PM" : "AM";
+        TxtTime.text = (Warehouse.Hour() % 12 == 0 ? 12 : Warehouse.Hour() % 12) + ":00";
+        TxtTimeAMPM.text = Warehouse.Hour() % 24 > 11 ? "PM" : "AM";
     }
 }
