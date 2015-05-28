@@ -59,17 +59,10 @@ public class PendingActiveItem : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    //public void OnDeselect(BaseEventData data)
-    //{
-    //    Debug.Log(ItemType + " item " + delivery.Index + "deselected");
-    //    thisButton.colors = defaultColors;
-    //    uiManager.SelectPendingActiveItem(-1,ItemType); // Hide item actions panel
-    //}
-
     public void OnPointerClick(PointerEventData data)
     {
         thisButton.colors = selectedColors;
-        uiManager.SelectPendingActiveItem(delivery.DeliveryID, ItemType); // Show item actions panel
+        uiManager.SelectItem(this); // Show item actions panel
     }
 
 	void Start ()
@@ -87,10 +80,17 @@ public class PendingActiveItem : MonoBehaviour, IPointerClickHandler
 	}
     void LateUpdate()
     {
-        if(delivery.Accepted)
+        if(delivery.Accepted && !delivery.Unloading)
         {
-            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (Delivery.DeliveryTime - Delivery.TimeRemaining()) / Delivery.DeliveryTime));
-            TxtDescription.text = "Arrives in <b>" + Mathf.CeilToInt(Delivery.TimeRemaining() / 2.5f) + "</b> hours";
+            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (delivery.DeliveryTime - delivery.TimeRemaining()) / delivery.DeliveryTime));
+            TxtDescription.text = Delivery.TimeRemaining() <= 0 ? "Arrived, waiting to unload" :
+                "Arrives in <b>" + Mathf.CeilToInt(Delivery.TimeRemaining() / 2.5f) + "</b> hours";
+        }
+        if(delivery.Unloading)
+        {
+            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (delivery.Quantity - delivery.Unloaded) / (float)delivery.Quantity));
+            TxtDescription.text = "Unloading";
+            TxtQuantity.text = (delivery.Quantity - delivery.Unloaded).ToString();
         }
     }
 }

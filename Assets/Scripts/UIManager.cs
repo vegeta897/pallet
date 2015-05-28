@@ -29,8 +29,8 @@ public class UIManager : MonoBehaviour
     public GameObject PanActiveList;
     public GameObject PanActiveItems;
     public PendingActiveItem BtnActiveItem;
-    public PendingItemActions PanPendingItemActions;
-    public PendingItemActions PanActiveItemActions;
+    public PendingActiveActions PanPendingItemActions;
+    public PendingActiveActions PanActiveItemActions;
 
     private int selectedPendingID;
     private int selectedActiveID;
@@ -81,27 +81,26 @@ public class UIManager : MonoBehaviour
         pendingItems[newDelivery.DeliveryID] = pendingItem;
     }
 
-    public void SelectPendingActiveItem(int id, string itemType)
+    public void SelectItem(PendingActiveItem item)
     {
-        if(itemType == "pending")
+        if(item.ItemType == "pending")
         {
-            selectedPendingID = id;
-            PanPendingItemActions.gameObject.SetActive(id >= 0);
+            selectedPendingID = item.Delivery.DeliveryID;
+            PanPendingItemActions.Item = item;
         }
         else
         {
-            selectedActiveID = id;
-            PanActiveItemActions.gameObject.SetActive(id >= 0);
+            selectedActiveID = item.Delivery.DeliveryID;
+            PanActiveItemActions.Item = item;
         }
-        foreach (KeyValuePair<int, PendingActiveItem> item in (itemType == "pending" ? pendingItems : activeItems))
+        foreach (KeyValuePair<int, PendingActiveItem> listItem in (item.ItemType == "pending" ? pendingItems : activeItems))
         {
-            item.Value.Selected = item.Key == id;
+            listItem.Value.Selected = listItem.Key == item.Delivery.DeliveryID;
         }
     }
 
     public void AcceptDelivery()
     {
-        PanPendingItemActions.gameObject.SetActive(false);
         Warehouse.AcceptDelivery(selectedPendingID);
         PendingActiveItem activeItem = Instantiate(BtnActiveItem) as PendingActiveItem;
         activeItem.transform.SetParent(PanActiveItems.transform, false);
@@ -113,19 +112,36 @@ public class UIManager : MonoBehaviour
         pendingItems.Remove(selectedPendingID);
         selectedPendingID = -1;
     }
+
     public void RejectDelivery()
     {
-        PanPendingItemActions.gameObject.SetActive(false);
-        Warehouse.RejectDelivery(selectedPendingID);
-        GameObject.Destroy(pendingItems[selectedPendingID].gameObject);
-        pendingItems.Remove(selectedPendingID);
-        selectedPendingID = -1;
+        RemoveItem(selectedPendingID);
+    }
+
+    public void RemoveItem(int itemID)
+    {
+        Warehouse.RemoveItem(itemID);
+        if(pendingItems.ContainsKey(itemID))
+        {
+            GameObject.Destroy(pendingItems[itemID].gameObject);
+            PanPendingItemActions.Item = null;
+            pendingItems.Remove(itemID);
+        }
+        if(activeItems.ContainsKey(itemID))
+        {
+            GameObject.Destroy(activeItems[itemID].gameObject);
+            PanActiveItemActions.Item = null;
+            activeItems.Remove(itemID);
+        }
+        selectedPendingID = selectedPendingID == itemID ? -1 : selectedPendingID;
+        selectedActiveID = selectedActiveID == itemID ? -1 : selectedActiveID;
+
     }
 
     public void Click(BaseEventData data)
     {
-        PanPendingItemActions.gameObject.SetActive(false);
-        PanActiveItemActions.gameObject.SetActive(false);
+        PanPendingItemActions.Item = null;
+        PanActiveItemActions.Item = null;
         selectedPendingID = -1;
         selectedActiveID = -1;
         foreach (KeyValuePair<int, PendingActiveItem> item in pendingItems)

@@ -64,7 +64,7 @@ public class Warehouse : MonoBehaviour
     // 1 day = 60 seconds
     public static int PaydayInterval = 14 * 60; // 14 days
     public int NextPayday;
-    private int DeliveryInterval = 5 * 60; // 5 days
+    private int DeliveryInterval;
 
     public void HireWorker()
     {
@@ -81,7 +81,7 @@ public class Warehouse : MonoBehaviour
         deliveries[id].Accepted = true;
     }
 
-    public void RejectDelivery(int id)
+    public void RemoveItem(int id)
     {
         ScriptableObject.Destroy(deliveries[id]);
         deliveries.Remove(id);
@@ -96,19 +96,41 @@ public class Warehouse : MonoBehaviour
                 int seconds = Mathf.FloorToInt(Time.time);
                 if (seconds % (PaydayInterval) == 0) // If it is payday
                 {
-                    Debug.Log("payday!  " + "$" + (workers * 50).ToString("F2"));
                     money -= workers * 50;
                     NextPayday = seconds + PaydayInterval;
                 }
                 if (seconds % (DeliveryInterval) == 0 || seconds == 1) // Create an order on start
                 {
-                    Debug.Log("new delivery request!");
                     Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
                     LastDeliveryID += 1;
-                    newDelivery.Init(LastDeliveryID, Random.Range(1, 8) * 5);
+                    newDelivery.Init(LastDeliveryID, Random.Range(2, 8) * 5);
                     deliveries[LastDeliveryID] = newDelivery;
                     UIManager.AddPendingItem(newDelivery);
+                    DeliveryInterval = Random.Range(1,3) * 60; // Next delivery request in 1-3 days
                 }
+                int busyWorkers = 0;
+                List<int> deliveryKeys = new List<int>(deliveries.Keys);
+                foreach (int key in deliveryKeys)
+                {
+                    Delivery item = deliveries[key];
+                    if(item.Accepted && !item.Delivered && item.TimeRemaining() <= 0)
+                    {
+                        item.Delivered = true;
+                    }
+                    if(item.Unloading)
+                    {
+                        int stockUnloaded = Mathf.Min((item.Quantity - item.Unloaded), workers - busyWorkers);
+                        stock += stockUnloaded;
+                        item.Unloaded += stockUnloaded;
+                        busyWorkers = stockUnloaded;
+
+                        if(item.Unloaded >= item.Quantity)
+                        {
+                            UIManager.RemoveItem(key);
+                        }
+                    }
+                }
+                
             }
         }
     }
@@ -116,6 +138,7 @@ public class Warehouse : MonoBehaviour
 	void Start ()
     {
         NextPayday = PaydayInterval;
+        DeliveryInterval = Random.Range(1, 3) * 60; // 1-3 days
         StartCoroutine(DoTick()); // Begin ticking
 	}
 	

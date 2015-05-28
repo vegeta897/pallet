@@ -5,6 +5,10 @@ public class Delivery : ScriptableObject
 {
     private bool accepted;
     private float acceptTime;
+    private bool delivered;
+    private bool unloading;
+    private int unloaded;
+    private bool complete;
 
     public int Quantity;
     public int DeliveryID;
@@ -18,8 +22,45 @@ public class Delivery : ScriptableObject
         set
         {
             accepted = value;
-            DeliveryTime = 180; // 3 days
+            DeliveryTime = 60; // 1 day
             acceptTime = Time.time;
+        }
+    }
+    public bool Delivered
+    {
+        get
+        {
+            return delivered;
+        }
+        set
+        {
+            delivered = value;
+        }
+    }
+    public bool Unloading
+    {
+        get
+        {
+            return unloading;
+        }
+        set
+        {
+            unloading = value;
+        }
+    }
+    public int Unloaded
+    {
+        get
+        {
+            return unloaded;
+        }
+        set
+        {
+            unloaded = value;
+            if(unloaded >= Quantity)
+            {
+                ScriptableObject.Destroy(this);
+            }
         }
     }
 
