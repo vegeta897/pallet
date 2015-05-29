@@ -225,7 +225,7 @@ public class Warehouse : MonoBehaviour
 	void Start ()
     {
         NextPayday = PaydayInterval;
-        DeliveryInterval = Random.Range(1, 3) * 60; // 1-3 days
+        DeliveryInterval = Random.Range(3, 5) * 60; // 3-5 days
         OrderInterval = 60; // Every day
         StartCoroutine(DoTick()); // Begin ticking
 	}
