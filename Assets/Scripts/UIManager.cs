@@ -19,7 +19,10 @@ public class UIManager : MonoBehaviour
     public Text TxtWorkers;
     public Text TxtUntilPayday;
     public Text TxtPaydayAmount;
-    public Text TxtStockAmount;
+    public Text TxtTotalStock;
+    public Text TxtStockRacked;
+    public Text TxtStockUnloaded;
+    public Text TxtStockPicked;
     public Button BtnHire;
     public Button BtnFire;
     public InputField InpWage;
@@ -173,7 +176,10 @@ public class UIManager : MonoBehaviour
         TxtWorkers.text = "Workers: <b>" + Warehouse.Workers + "</b>";
         TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Time.time) / 64f) + " days</b>";
         TxtPaydayAmount.text = "Payday Cost: <b>$" + (Warehouse.Workers * Warehouse.Wage).ToString("F2") + "</b>";
-        TxtStockAmount.text = "Stock Count: <b>" + Warehouse.Stock + "</b>";
+        TxtTotalStock.text = "Total Stock: <b>" + (Warehouse.StockRacked + Warehouse.StockPicked + Warehouse.StockUnloaded) + "</b>";
+        TxtStockRacked.text = Warehouse.StockRacked.ToString();
+        TxtStockUnloaded.text = Warehouse.StockUnloaded.ToString();
+        TxtStockPicked.text = Warehouse.StockPicked.ToString();
         BtnFire.interactable = Warehouse.Workers > 0;
         TxtTime.text = (Warehouse.Hour() % 12 == 0 ? 12 : Warehouse.Hour() % 12) + ":00";
         TxtTimeAMPM.text = Warehouse.Hour() % 24 > 11 ? "PM" : "AM";

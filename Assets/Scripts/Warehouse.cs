@@ -8,7 +8,9 @@ public class Warehouse : MonoBehaviour
     private decimal money = 2000;
     private int workers = 2;
     private decimal wage = 50;
-    private int stock = 0;
+    private int stockRacked = 0;
+    private int stockPicked = 0;
+    private int stockUnloaded = 0;
     private List<ActionItem> actionItems = new List<ActionItem>();
 
     public UIManager UIManager;
@@ -49,15 +51,37 @@ public class Warehouse : MonoBehaviour
             wage = value;
         }
     }
-    public int Stock
+    public int StockRacked
     {
         get
         {
-            return stock;
+            return stockRacked;
         }
         set
         {
-            stock = value;
+            stockRacked = value;
+        }
+    }
+    public int StockPicked
+    {
+        get
+        {
+            return stockPicked;
+        }
+        set
+        {
+            stockPicked = value;
+        }
+    }
+    public int StockUnloaded
+    {
+        get
+        {
+            return stockUnloaded;
+        }
+        set
+        {
+            stockUnloaded = value;
         }
     }
 
@@ -144,10 +168,10 @@ public class Warehouse : MonoBehaviour
                         }
                         else if(item.Status == "unloading")
                         {
-                            int stockUnloaded = Mathf.Min((item.Quantity - d.QtyUnloaded), workers - busyWorkers);
-                            stock += stockUnloaded;
-                            d.QtyUnloaded += stockUnloaded;
-                            busyWorkers += stockUnloaded;
+                            int thisStockUnloaded = Mathf.Min((item.Quantity - d.QtyUnloaded), workers - busyWorkers);
+                            stockUnloaded += thisStockUnloaded;
+                            d.QtyUnloaded += thisStockUnloaded;
+                            busyWorkers += thisStockUnloaded;
 
                             if (d.QtyUnloaded >= item.Quantity)
                             {
@@ -160,10 +184,12 @@ public class Warehouse : MonoBehaviour
                         Order o = item as Order;
                         if(item.Status == "picking")
                         {
-                            // TODO: Prevent picking from 0 inventory
-                            int stockPicked = Mathf.Min((item.Quantity - o.QtyPicked), workers - busyWorkers);
-                            o.QtyPicked += stockPicked;
-                            busyWorkers += stockPicked;
+                            int thisStockPicked = Mathf.Min((item.Quantity - o.QtyPicked), workers - busyWorkers);
+                            thisStockPicked = Mathf.Min(thisStockPicked, stockRacked);
+                            stockRacked -= thisStockPicked;
+                            stockPicked += thisStockPicked;
+                            o.QtyPicked += thisStockPicked;
+                            busyWorkers += thisStockPicked;
                             if (o.QtyPicked >= item.Quantity)
                             {
                                 item.Status = "picked";
@@ -171,9 +197,11 @@ public class Warehouse : MonoBehaviour
                         }
                         else if (item.Status == "loading")
                         {
-                            int stockLoaded = Mathf.Min((item.Quantity - o.QtyLoaded), workers - busyWorkers);
-                            o.QtyLoaded += stockLoaded;
-                            busyWorkers += stockLoaded;
+                            int thisStockLoaded = Mathf.Min((item.Quantity - o.QtyLoaded), workers - busyWorkers);
+                            thisStockLoaded = Mathf.Min(thisStockLoaded, stockPicked);
+                            stockPicked -= thisStockLoaded;
+                            o.QtyLoaded += thisStockLoaded;
+                            busyWorkers += thisStockLoaded;
                             if (o.QtyLoaded >= item.Quantity)
                             {
                                 item.Status = "loaded";
@@ -186,7 +214,10 @@ public class Warehouse : MonoBehaviour
                         }
                     }
                 }
-                
+                // If workers are free after handling orders/deliveries, transfer unloaded stock to racks
+                int thisStockRacked = Mathf.Min(workers - busyWorkers, stockUnloaded);
+                stockUnloaded -= thisStockRacked;
+                stockRacked += thisStockRacked;
             }
         }
     }
