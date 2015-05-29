@@ -94,6 +94,9 @@ public class PendingActiveActions : MonoBehaviour
                     case "accepted":
                         BtnAccept.gameObject.SetActive(false);
                         break;
+                    case "delivering":
+                        BtnAccept.gameObject.SetActive(false);
+                        break;
                     case "delivered":
                         TxtAccept.text = "Unload";
                         break;
