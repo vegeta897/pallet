@@ -2,8 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Warehouse : MonoBehaviour 
+public delegate void ActionItemAdded(ActionItem newActionItem);
+public delegate void ActionItemRemoved(ActionItem removedActionItem);
+
+public class Warehouse : MonoBehaviour
 {
+    public event ActionItemAdded OnActionItemAdded;
+    public event ActionItemRemoved OnActionItemRemoved;
 
     private decimal money = 2000;
     private int workers = 2;
@@ -13,7 +18,6 @@ public class Warehouse : MonoBehaviour
     private int stockUnloaded = 0;
     private List<ActionItem> actionItems = new List<ActionItem>();
 
-    public UIManager UIManager;
     public int LastDeliveryID = 0;
     public int LastOrderID = 0;
     public float Timescale = 1;
@@ -107,10 +111,23 @@ public class Warehouse : MonoBehaviour
         money -= item.Type == "delivery" ? item.Quantity * 15 : 0;
     }
 
-    public void RemoveItem(ActionItem item)
+    private void AddActionItem(ActionItem newActionItem)
     {
-        ScriptableObject.Destroy(item);
-        actionItems.Remove(item);
+        actionItems.Add(newActionItem);
+        if (OnActionItemAdded != null)
+        {
+            OnActionItemAdded(newActionItem);
+        }
+    }
+
+    public void RemoveActionItem(ActionItem removedActionItem)
+    {
+        ScriptableObject.Destroy(removedActionItem);
+        actionItems.Remove(removedActionItem);
+        if (OnActionItemRemoved != null)
+        {
+            OnActionItemRemoved(removedActionItem);
+        }
     }
 
     public int Hour() // Returns 0-23 on 24-hour clock, +7 hour offset
@@ -135,8 +152,7 @@ public class Warehouse : MonoBehaviour
                     Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
                     LastDeliveryID += 1;
                     newDelivery.Init("delivery", LastDeliveryID, Random.Range(2, 8) * 5);
-                    actionItems.Add(newDelivery);
-                    UIManager.AddItem(newDelivery);
+                    AddActionItem(newDelivery);
                     DeliveryInterval = Random.Range(1,3) * 60; // Next delivery request in 1-3 days
                 }
                 if (seconds % (OrderInterval) == 0)
@@ -147,8 +163,7 @@ public class Warehouse : MonoBehaviour
                         Order newOrder = ScriptableObject.CreateInstance("Order") as Order;
                         LastOrderID += 1;
                         newOrder.Init("order", LastOrderID, Random.Range(3, 6) * Random.Range(1, 5));
-                        actionItems.Add(newOrder);
-                        UIManager.AddItem(newOrder);
+                        AddActionItem(newOrder);
                     }
                 }
                 int busyWorkers = 0;
@@ -175,7 +190,7 @@ public class Warehouse : MonoBehaviour
 
                             if (d.QtyUnloaded >= item.Quantity)
                             {
-                                UIManager.RemoveItem(item);
+                                RemoveActionItem(item);
                             }
                         }
                     }
@@ -210,7 +225,7 @@ public class Warehouse : MonoBehaviour
                         else if (item.Status == "shipping" && item.TimeRemaining() <= 0)
                         {
                             money += item.Quantity * 25;
-                            UIManager.RemoveItem(item);
+                            RemoveActionItem(item);
                         }
                     }
                 }
@@ -220,6 +235,11 @@ public class Warehouse : MonoBehaviour
                 stockRacked += thisStockRacked;
             }
         }
+    }
+
+    void Awake ()
+    {
+
     }
 
 	void Start ()
@@ -234,9 +254,4 @@ public class Warehouse : MonoBehaviour
     {
 
 	}
-
-    void LateUpdate ()
-    {
-
-    }
 }

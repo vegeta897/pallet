@@ -1163,6 +1163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 225743947f1f35049a613597dae770c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ListType: active
   UIManager: {fileID: 1468655327}
   BtnAccept: {fileID: 1427951976}
   TxtAccept: {fileID: 647501611}
@@ -1713,6 +1714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 225743947f1f35049a613597dae770c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ListType: pending
   UIManager: {fileID: 1468655327}
   BtnAccept: {fileID: 329608735}
   TxtAccept: {fileID: 1678073729}
@@ -4489,7 +4491,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28ce4f94bdf5a9a489a1b8f29207ebe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManager: {fileID: 1468655327}
   LastDeliveryID: 0
   LastOrderID: 0
   Timescale: 1

@@ -4,9 +4,9 @@ using System.Collections;
 
 public class PendingActiveActions : MonoBehaviour 
 {
-    private BtnActionItem btnItem;
-    private ActionItem item;
+    private ActionItem selectedItem;
 
+    public string ListType;
     public UIManager UIManager;
     public Button BtnAccept;
     public Text TxtAccept;
@@ -14,62 +14,63 @@ public class PendingActiveActions : MonoBehaviour
     public Text TxtCancel;
     public Button BtnOption1;
     public Text TxtOption1;
-    public BtnActionItem BtnItem
-    {
-        get
-        {
-            return btnItem;
-        }
-        set
-        {
-            btnItem = value;
-            item = value != null ? btnItem.Item : null;
-            gameObject.SetActive(value != null);
-        }
-    }
 
     // TODO: Implement a linear flow for orders and deliveries, which they can move through forwards or back
     public void Accept()
     {
-        string origStatus = item.Status;
+        string origStatus = selectedItem.Status;
         if (origStatus == "new")
         {
-            item.Status = "accepted";
-            UIManager.AcceptItem(item);
+            selectedItem.Status = "accepted";
+            UIManager.AcceptItem(selectedItem);
             gameObject.SetActive(false);
-        } 
-        if(item.Type == "delivery")
+        }
+        if (selectedItem.Type == "delivery")
         {
             if (origStatus == "delivered")
             {
-                item.Status = "unloading";
+                selectedItem.Status = "unloading";
             }
         }
-        else if(item.Type == "order")
+        else if (selectedItem.Type == "order")
         {
             if (origStatus == "accepted")
             {
-                item.Status = "picking";
+                selectedItem.Status = "picking";
             }
             if (origStatus == "picked")
             {
-                item.Status = "loading";
+                selectedItem.Status = "loading";
             }
             if (origStatus == "loaded")
             {
-                item.Status = "shipping";
+                selectedItem.Status = "shipping";
             }
         }
     }
 
     public void Cancel()
     {
-        UIManager.RemoveItem(btnItem.Item);
+        UIManager.RemoveActionItem(selectedItem);
         gameObject.SetActive(false);
+    }
+
+    public void ActionItemSelected(ActionItem item)
+    {
+        selectedItem = item;
+        if (selectedItem == null)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive((selectedItem.Status == "new" && ListType == "pending") || (selectedItem.Status != "new" && ListType == "active"));
+        }
     }
 
 	void Start () 
     {
+        UIManager.OnActionItemSelected += ActionItemSelected;
         gameObject.SetActive(false);
 	}
 	
@@ -80,13 +81,13 @@ public class PendingActiveActions : MonoBehaviour
 
     void LateUpdate()
     {
-        if(btnItem != null)
+        if(selectedItem != null)
         {
             BtnAccept.gameObject.SetActive(true);
 
-            if (item.Type == "delivery")
+            if (selectedItem.Type == "delivery")
             {
-                switch (item.Status)
+                switch (selectedItem.Status)
                 {
                     case "new":
                         TxtAccept.text = "Accept";
@@ -102,10 +103,13 @@ public class PendingActiveActions : MonoBehaviour
                         break;
                 }
             }
-            else if(item.Type == "order")
+            else if (selectedItem.Type == "order")
             {
-                switch (item.Status)
+                switch (selectedItem.Status)
                 {
+                    case "new":
+                        TxtAccept.text = "Accept";
+                        break;
                     case "accepted":
                         TxtAccept.text = "Pick";
                         break;

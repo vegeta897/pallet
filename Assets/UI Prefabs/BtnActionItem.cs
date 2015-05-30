@@ -3,31 +3,35 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 
+public delegate void ActionItemSelected(ActionItem selectedActionItem);
+
 public class BtnActionItem : MonoBehaviour, IPointerClickHandler
 {
-    public Text TxtTitle;
-    public Text TxtDescription;
-    public Text TxtQuantity;
-    public RawImage ImgProgress;
-
-    private Button thisButton;
-    private ColorBlock defaultColors;
-    private ColorBlock selectedColors;
-    private ActionItem item;
-    private UIManager uiManager;
-    private bool selected;
+    public event ActionItemSelected OnActionItemSelected;
 
     public UIManager UIManager
     {
-        get 
+        get
         {
             return uiManager;
         }
         set
         {
             uiManager = value;
+            uiManager.OnActionItemSelected += ActionItemSelected;
         }
     }
+    public Text TxtTitle;
+    public Text TxtDescription;
+    public Text TxtQuantity;
+    public RawImage ImgProgress;
+
+    private UIManager uiManager;
+    private Button thisButton;
+    private ColorBlock defaultColors;
+    private ColorBlock selectedColors;
+    private ActionItem item;
+
     public ActionItem Item
     {
         get
@@ -44,35 +48,30 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
                 "A client wants to purchase some of your stock";
         }
     }
-    public bool Selected
+    public void ActionItemSelected(ActionItem selectedActionItem)
     {
-        get
+        if (thisButton == null) // TODO: Need to stop this monobehavior when object destroyed
         {
-            return selected;
+            uiManager.OnActionItemSelected -= ActionItemSelected;
         }
-        set
-        {
-            selected = value;
-            thisButton.colors = value ? selectedColors : defaultColors;
-        }
+        thisButton.colors = item == selectedActionItem ? selectedColors : defaultColors;
     }
 
     public void OnPointerClick(PointerEventData data)
     {
         if(data.pointerId == -2 && item.Status == "new") // Right click
         {
-            uiManager.RemoveItem(this.item); // Delete if pending item
+            UIManager.RemoveActionItem(item); // Delete if pending item
         }
         else
         {
-            thisButton.colors = selectedColors;
-            uiManager.SelectItem(this); // Show item actions panel
+            OnActionItemSelected(item);
         }
     }
 
 	void Start ()
     {
-        thisButton = this.gameObject.GetComponent<Button>();
+        thisButton = gameObject.GetComponent<Button>();
         defaultColors = thisButton.colors;
         selectedColors = defaultColors;
         selectedColors.normalColor = new Color(0.78F, 1F, 0.78F, 1F);
@@ -124,7 +123,7 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
         {
             Order o = item as Order;
             ImgProgress.gameObject.SetActive(true);
-            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, o.QtyLoaded / (float)item.Quantity));
+            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (item.Quantity - o.QtyLoaded) / (float)item.Quantity));
             TxtDescription.text = "Loading stock <b>" + o.QtyLoaded + "</b> of <b>" + item.Quantity + "</b>";
         }
         if (item.Status == "loaded")
@@ -135,7 +134,7 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
         {
             Order o = item as Order;
             ImgProgress.gameObject.SetActive(true);
-            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, o.TimeRemaining() / o.ShippingTime));
+            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (o.ShippingTime - o.TimeRemaining()) / o.ShippingTime));
             TxtDescription.text = "Arrives at destination in <b>" + Mathf.CeilToInt(o.TimeRemaining() / 2.5f) + "</b> hours";
         }
     }

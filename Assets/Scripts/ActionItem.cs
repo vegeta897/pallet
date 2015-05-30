@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ActionItem : ScriptableObject
+public abstract class ActionItem : ScriptableObject
 {
     internal string Type;
     internal int Quantity;
@@ -11,10 +11,7 @@ public class ActionItem : ScriptableObject
         get;set;
     }
 
-    public virtual float TimeRemaining()
-    {
-        return 0;
-    }
+    public abstract float TimeRemaining();
 
     public void Init(string type, int id, int qty)
     {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
+    public event ActionItemSelected OnActionItemSelected;
 
     public Warehouse Warehouse;
     public Text TxtTime;
@@ -35,8 +36,7 @@ public class UIManager : MonoBehaviour
     public PendingActiveActions PanPendingItemActions;
     public PendingActiveActions PanActiveItemActions;
 
-    private BtnActionItem selectedPendingItem;
-    private BtnActionItem selectedActiveItem;
+    private ActionItem selectedActionItem;
     private Dictionary<ActionItem, BtnActionItem> actionItems = new Dictionary<ActionItem, BtnActionItem>();
 
     public void SetTimescale(int multi)
@@ -73,80 +73,54 @@ public class UIManager : MonoBehaviour
         InpWage.text = Warehouse.Wage.ToString("F2");
     }
 
-    public void AddItem(ActionItem newActionItem)
+    private void ActionItemAdded(ActionItem newActionItem)
     {
         BtnActionItem newBtnActionItem = Instantiate(BtnActionItem) as BtnActionItem;
         newBtnActionItem.transform.SetParent(PanPendingItems.transform, false);
         newBtnActionItem.Item = newActionItem;
         newBtnActionItem.UIManager = this;
+        newBtnActionItem.OnActionItemSelected += ActionItemSelected;
         actionItems[newActionItem] = newBtnActionItem;
     }
 
-    public void SelectItem(BtnActionItem item)
+    private void ActionItemRemoved(ActionItem removedActionItem)
     {
-        if(item.Item.Status == "new")
+        if(selectedActionItem == removedActionItem)
         {
-            selectedPendingItem = item;
-            PanPendingItemActions.BtnItem = item;
+            ActionItemSelected(null);
         }
-        else
-        {
-            selectedActiveItem = item;
-            PanActiveItemActions.BtnItem = item;
-        }
-        foreach(KeyValuePair<ActionItem, BtnActionItem> entry in actionItems)
-        {
-            entry.Value.Selected = entry.Value == selectedPendingItem || entry.Value == selectedActiveItem;
-        }
+        actionItems[removedActionItem].OnActionItemSelected -= ActionItemSelected;
+        GameObject.Destroy(actionItems[removedActionItem].gameObject);
+        actionItems.Remove(removedActionItem);
+    }
+
+    private void ActionItemSelected(ActionItem actionItem)
+    {
+        selectedActionItem = actionItem;
+        OnActionItemSelected(actionItem);
     }
 
     public void AcceptItem(ActionItem item)
     {
-        BtnActionItem activeItem = Instantiate(BtnActiveItem) as BtnActionItem;
-        activeItem.transform.SetParent(PanActiveItems.transform, false);
-        activeItem.Item = item;
-        activeItem.UIManager = this;
-        GameObject.Destroy(actionItems[item].gameObject);
-        actionItems[item] = activeItem;
-        selectedPendingItem = null;
+        actionItems[item].transform.SetParent(PanActiveItems.transform, false);
+        OnActionItemSelected(item);
         Warehouse.AcceptItem(item);
     }
 
-    public void RejectItem()
+    public void RemoveActionItem(ActionItem actionItem)
     {
-        RemoveItem(selectedPendingItem.Item);
-    }
-
-    public void RemoveItem(ActionItem item)
-    {
-        Warehouse.RemoveItem(item);
-        GameObject.Destroy(actionItems[item].gameObject);
-        if(item.Status == "new")
-        {
-            PanPendingItemActions.BtnItem = null;
-        }
-        else if(selectedActiveItem == actionItems[item])
-        {
-            PanActiveItemActions.BtnItem = null;
-        }
-        actionItems.Remove(item);
+        Warehouse.RemoveActionItem(actionItem);
     }
 
     public void Click(BaseEventData data)
     {
-        PanPendingItemActions.BtnItem = null;
-        PanActiveItemActions.BtnItem = null;
-        selectedPendingItem = null;
-        selectedActiveItem = null;
-        foreach (KeyValuePair<ActionItem, BtnActionItem> item in actionItems)
-        {
-            item.Value.Selected = false;
-        }
+        ActionItemSelected(null);
     }
 
     void Start()
     {
-        
+        Warehouse.OnActionItemAdded += ActionItemAdded;
+        Warehouse.OnActionItemRemoved += ActionItemRemoved;
 
         BtnPause.onClick.AddListener(() => SetTimescale(0));
         Btn1x.onClick.AddListener(() => SetTimescale(1));
