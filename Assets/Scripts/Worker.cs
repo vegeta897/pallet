@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 public class Worker : MonoBehaviour 
 {
-
-    public Text TxtName;
-    public Text TxtStatus;
+    public int ID;
 
 	void Start () 
     {
@@ -17,4 +14,9 @@ public class Worker : MonoBehaviour
     {
 	    
 	}
+
+    public void Init(int id)
+    {
+        ID = id;
+    }
 }

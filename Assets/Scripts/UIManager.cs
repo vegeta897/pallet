@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     public Text TxtStockRacked;
     public Text TxtStockUnloaded;
     public Text TxtStockPicked;
+    public WorkerList WorkerList;
     public Button BtnHire;
     public Button BtnFire;
     public InputField InpWage;
@@ -65,6 +66,12 @@ public class UIManager : MonoBehaviour
                 Btn8x.Highlight();
                 break;
         }
+    }
+
+    public void HireWorker()
+    {
+        Worker newWorker = Warehouse.HireWorker();
+        WorkerList.AddWorker(newWorker);
     }
 
     public void SetWage()
@@ -136,6 +143,10 @@ public class UIManager : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
+        foreach (Transform child in WorkerList.transform) // Remove editor placeholder
+        {
+            GameObject.Destroy(child.gameObject);
+        }
         InpWage.textComponent.alignment = TextAnchor.MiddleRight;
     }
 
@@ -147,14 +158,14 @@ public class UIManager : MonoBehaviour
     void LateUpdate()
     {
         TxtMoney.text = "<b>$" + Warehouse.Money.ToString("F2") + "</b>";
-        TxtWorkers.text = "Workers: <b>" + Warehouse.Workers + "</b>";
+        TxtWorkers.text = "Workers: <b>" + Warehouse.WorkerCount + "</b>";
         TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Time.time) / 64f) + " days</b>";
-        TxtPaydayAmount.text = "Payday Cost: <b>$" + (Warehouse.Workers * Warehouse.Wage).ToString("F2") + "</b>";
+        TxtPaydayAmount.text = "Payday Cost: <b>$" + (Warehouse.WorkerCount * Warehouse.Wage).ToString("F2") + "</b>";
         TxtTotalStock.text = "Total Stock: <b>" + (Warehouse.StockRacked + Warehouse.StockPicked + Warehouse.StockUnloaded) + "</b>";
         TxtStockRacked.text = Warehouse.StockRacked.ToString();
         TxtStockUnloaded.text = Warehouse.StockUnloaded.ToString();
         TxtStockPicked.text = Warehouse.StockPicked.ToString();
-        BtnFire.interactable = Warehouse.Workers > 0;
+        BtnFire.interactable = Warehouse.WorkerCount > 0;
         TxtTime.text = (Warehouse.Hour() % 12 == 0 ? 12 : Warehouse.Hour() % 12) + ":00";
         TxtTimeAMPM.text = Warehouse.Hour() % 24 > 11 ? "PM" : "AM";
     }

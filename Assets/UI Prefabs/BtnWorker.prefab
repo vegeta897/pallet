@@ -83,6 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca0f527385e57a94a930a19abe521a8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Worker: {fileID: 0}
   TxtName: {fileID: 11436320}
   TxtStatus: {fileID: 11452012}
 --- !u!114 &11436320

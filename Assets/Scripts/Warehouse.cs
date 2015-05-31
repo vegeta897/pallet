@@ -11,16 +11,19 @@ public class Warehouse : MonoBehaviour
     public event ActionItemRemoved OnActionItemRemoved;
 
     private decimal money = 2000;
-    private int workers = 2;
+    private int workerCount = 0;
     private decimal wage = 50;
     private int stockRacked = 0;
     private int stockPicked = 0;
     private int stockUnloaded = 0;
     private List<ActionItem> actionItems = new List<ActionItem>();
+    private List<Worker> workers = new List<Worker>();
+    private int lastDeliveryID = 0;
+    private int lastOrderID = 0;
+    private int lastWorkerID = 0;
 
-    public int LastDeliveryID = 0;
-    public int LastOrderID = 0;
     public float Timescale = 1;
+    public Worker PrefabWorker;
 
     public decimal Money
     {
@@ -33,15 +36,15 @@ public class Warehouse : MonoBehaviour
             money = value;
         }
     }
-    public int Workers
+    public int WorkerCount
     {
         get
         {
-            return workers;
+            return workerCount;
         }
         set
         {
-            workers = value;
+            workerCount = value;
         }
     }
     public decimal Wage
@@ -96,14 +99,20 @@ public class Warehouse : MonoBehaviour
     private int DeliveryInterval;
     private int OrderInterval;
 
-    public void HireWorker()
+    public Worker HireWorker()
     {
-        workers += 1;
+        workerCount += 1;
+        lastWorkerID += 1;
+        Worker newWorker = Instantiate(PrefabWorker) as Worker;
+        newWorker.Init(lastWorkerID);
+        newWorker.transform.SetParent(gameObject.transform, false);
+        workers.Add(newWorker);
+        return newWorker;
     }
 
     public void FireWorker()
     {
-        workers -= workers == 0 ? 0 : 1;
+        workerCount -= workerCount == 0 ? 0 : 1;
     }
 
     public void AcceptItem(ActionItem item)
@@ -144,14 +153,14 @@ public class Warehouse : MonoBehaviour
                 int seconds = Mathf.FloorToInt(Time.time);
                 if (seconds % (PaydayInterval) == 0) // If it is payday
                 {
-                    money -= workers * 50;
+                    money -= workerCount * 50;
                     NextPayday = seconds + PaydayInterval;
                 }
                 if (seconds % (DeliveryInterval) == 0 || seconds == 1) // Create an order on start
                 {
                     Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
-                    LastDeliveryID += 1;
-                    newDelivery.Init("delivery", LastDeliveryID, Random.Range(2, 8) * 5);
+                    lastDeliveryID += 1;
+                    newDelivery.Init("delivery", lastDeliveryID, Random.Range(2, 8) * 5);
                     AddActionItem(newDelivery);
                     DeliveryInterval = Random.Range(1,3) * 60; // Next delivery request in 1-3 days
                 }
@@ -161,8 +170,8 @@ public class Warehouse : MonoBehaviour
                     for(int i = 0; i < newOrderCount; i++)
                     {
                         Order newOrder = ScriptableObject.CreateInstance("Order") as Order;
-                        LastOrderID += 1;
-                        newOrder.Init("order", LastOrderID, Random.Range(3, 6) * Random.Range(1, 5));
+                        lastOrderID += 1;
+                        newOrder.Init("order", lastOrderID, Random.Range(3, 6) * Random.Range(1, 5));
                         AddActionItem(newOrder);
                     }
                 }
@@ -183,7 +192,7 @@ public class Warehouse : MonoBehaviour
                         }
                         else if(item.Status == "unloading")
                         {
-                            int thisStockUnloaded = Mathf.Min((item.Quantity - d.QtyUnloaded), workers - busyWorkers);
+                            int thisStockUnloaded = Mathf.Min((item.Quantity - d.QtyUnloaded), workerCount - busyWorkers);
                             stockUnloaded += thisStockUnloaded;
                             d.QtyUnloaded += thisStockUnloaded;
                             busyWorkers += thisStockUnloaded;
@@ -199,7 +208,7 @@ public class Warehouse : MonoBehaviour
                         Order o = item as Order;
                         if(item.Status == "picking")
                         {
-                            int thisStockPicked = Mathf.Min((item.Quantity - o.QtyPicked), workers - busyWorkers);
+                            int thisStockPicked = Mathf.Min((item.Quantity - o.QtyPicked), workerCount - busyWorkers);
                             thisStockPicked = Mathf.Min(thisStockPicked, stockRacked);
                             stockRacked -= thisStockPicked;
                             stockPicked += thisStockPicked;
@@ -212,7 +221,7 @@ public class Warehouse : MonoBehaviour
                         }
                         else if (item.Status == "loading")
                         {
-                            int thisStockLoaded = Mathf.Min((item.Quantity - o.QtyLoaded), workers - busyWorkers);
+                            int thisStockLoaded = Mathf.Min((item.Quantity - o.QtyLoaded), workerCount - busyWorkers);
                             thisStockLoaded = Mathf.Min(thisStockLoaded, stockPicked);
                             stockPicked -= thisStockLoaded;
                             o.QtyLoaded += thisStockLoaded;
@@ -230,7 +239,7 @@ public class Warehouse : MonoBehaviour
                     }
                 }
                 // If workers are free after handling orders/deliveries, transfer unloaded stock to racks
-                int thisStockRacked = Mathf.Min(workers - busyWorkers, stockUnloaded);
+                int thisStockRacked = Mathf.Min(workerCount - busyWorkers, stockUnloaded);
                 stockUnloaded -= thisStockRacked;
                 stockRacked += thisStockRacked;
             }
