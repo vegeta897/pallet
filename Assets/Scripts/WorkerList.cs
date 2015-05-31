@@ -14,6 +14,7 @@ public class WorkerList : MonoBehaviour
         BtnWorker newBtnWorker = Instantiate(PrefabBtnWorker) as BtnWorker;
         newBtnWorker.transform.SetParent(gameObject.transform, false);
         newBtnWorker.Worker = newWorker;
+        workers.Add(newWorker, newBtnWorker);
         return newBtnWorker;
     }
 

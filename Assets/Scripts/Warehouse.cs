@@ -164,7 +164,7 @@ public class Warehouse : MonoBehaviour
                     lastDeliveryID += 1;
                     newDelivery.Init("delivery", lastDeliveryID, Random.Range(2, 8) * 5);
                     AddActionItem(newDelivery);
-                    DeliveryInterval = Random.Range(1,3) * 60; // Next delivery request in 1-3 days
+                    DeliveryInterval = Random.Range(3, 5) * 60; // Next request in 3-5 days
                 }
                 if (seconds % (OrderInterval) == 0)
                 {
@@ -255,8 +255,12 @@ public class Warehouse : MonoBehaviour
 
 	void Start ()
     {
+        foreach (Transform child in gameObject.transform) // Remove editor placeholder
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
         NextPayday = PaydayInterval;
-        DeliveryInterval = Random.Range(3, 5) * 60; // 3-5 days
         OrderInterval = 60; // Every day
         StartCoroutine(DoTick()); // Begin ticking
 	}
