@@ -38,6 +38,7 @@ public class UIManager : MonoBehaviour
     public PendingActiveActions PanActiveItemActions;
 
     private ActionItem selectedActionItem;
+    private Worker selectedWorker;
     private Dictionary<ActionItem, BtnActionItem> actionItems = new Dictionary<ActionItem, BtnActionItem>();
 
     public void SetTimescale(int multi)
@@ -71,7 +72,21 @@ public class UIManager : MonoBehaviour
     public void HireWorker()
     {
         Worker newWorker = Warehouse.HireWorker();
-        WorkerList.AddWorker(newWorker);
+        BtnWorker newBtnWorker = WorkerList.AddWorker(newWorker);
+        newBtnWorker.OnWorkerSelected += WorkerSelected;
+    }
+
+    public void FireWorker()
+    {
+        Warehouse.FireWorker(selectedWorker);
+        WorkerList.RemoveWorker(selectedWorker);
+    }
+
+    private void WorkerSelected(Worker worker)
+    {
+        Debug.Log("select worker event in uimanager");
+        selectedWorker = worker;
+        BtnFire.interactable = worker != null;
     }
 
     public void SetWage()
@@ -165,7 +180,6 @@ public class UIManager : MonoBehaviour
         TxtStockRacked.text = Warehouse.StockRacked.ToString();
         TxtStockUnloaded.text = Warehouse.StockUnloaded.ToString();
         TxtStockPicked.text = Warehouse.StockPicked.ToString();
-        BtnFire.interactable = Warehouse.WorkerCount > 0;
         TxtTime.text = (Warehouse.Hour() % 12 == 0 ? 12 : Warehouse.Hour() % 12) + ":00";
         TxtTimeAMPM.text = Warehouse.Hour() % 24 > 11 ? "PM" : "AM";
     }

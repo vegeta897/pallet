@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 
-public class BtnWorker : MonoBehaviour 
+public delegate void WorkerSelected(Worker selectedWorker);
+
+public class BtnWorker : MonoBehaviour, IPointerClickHandler
 {
+    public event WorkerSelected OnWorkerSelected;
+
     private Worker worker;
 
     public Text TxtName;
@@ -21,7 +26,12 @@ public class BtnWorker : MonoBehaviour
         }
     }
 
-	void Start () 
+    public void OnPointerClick(PointerEventData data)
+    {
+        OnWorkerSelected(worker);
+    }
+
+	void Start ()
     {
 
 	}

@@ -110,9 +110,11 @@ public class Warehouse : MonoBehaviour
         return newWorker;
     }
 
-    public void FireWorker()
+    public void FireWorker(Worker firedWorker)
     {
-        workerCount -= workerCount == 0 ? 0 : 1;
+        workerCount -= 1;
+        workers.Remove(firedWorker);
+        GameObject.Destroy(firedWorker.gameObject);
     }
 
     public void AcceptItem(ActionItem item)

@@ -1767,7 +1767,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1592914152}
+      - m_Target: {fileID: 1468655327}
         m_MethodName: FireWorker
         m_Mode: 1
         m_Arguments:
@@ -2186,7 +2186,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22493380, guid: cec6fca03f438164e96441f34054c06f, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -90
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 22493380, guid: cec6fca03f438164e96441f34054c06f, type: 2}
       propertyPath: m_SizeDelta.x
@@ -2218,7 +2218,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22493380, guid: cec6fca03f438164e96441f34054c06f, type: 2}
       propertyPath: m_Pivot.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11456266, guid: cec6fca03f438164e96441f34054c06f, type: 2}
       propertyPath: ItemType
@@ -3068,11 +3068,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22477048, guid: 01d468a054b9ebc4d938b4d3eb6502c6, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 132.5
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 22477048, guid: 01d468a054b9ebc4d938b4d3eb6502c6, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -17.5
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 22477048, guid: 01d468a054b9ebc4d938b4d3eb6502c6, type: 2}
       propertyPath: m_SizeDelta.x
@@ -3100,11 +3100,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22477048, guid: 01d468a054b9ebc4d938b4d3eb6502c6, type: 2}
       propertyPath: m_Pivot.x
-      value: .5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22477048, guid: 01d468a054b9ebc4d938b4d3eb6502c6, type: 2}
       propertyPath: m_Pivot.y
-      value: .5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11470930, guid: 01d468a054b9ebc4d938b4d3eb6502c6, type: 2}
       propertyPath: m_TargetGraphic
