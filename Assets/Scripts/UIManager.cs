@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public event ActionItemSelected OnActionItemSelected;
 
     public Warehouse Warehouse;
+    public WorkerManager WorkerManager;
     public Text TxtTime;
     public Text TxtTimeAMPM;
     public Button BtnPause;
@@ -71,20 +72,19 @@ public class UIManager : MonoBehaviour
 
     public void HireWorker()
     {
-        Worker newWorker = Warehouse.HireWorker();
+        Worker newWorker = WorkerManager.HireWorker();
         BtnWorker newBtnWorker = WorkerList.AddWorker(newWorker);
         newBtnWorker.OnWorkerSelected += WorkerSelected;
     }
 
     public void FireWorker()
     {
-        Warehouse.FireWorker(selectedWorker);
+        WorkerManager.FireWorker(selectedWorker);
         WorkerList.RemoveWorker(selectedWorker);
     }
 
     private void WorkerSelected(Worker worker)
     {
-        Debug.Log("select worker event in uimanager");
         selectedWorker = worker;
         BtnFire.interactable = worker != null;
     }
@@ -173,9 +173,9 @@ public class UIManager : MonoBehaviour
     void LateUpdate()
     {
         TxtMoney.text = "<b>$" + Warehouse.Money.ToString("F2") + "</b>";
-        TxtWorkers.text = "Workers: <b>" + Warehouse.WorkerCount + "</b>";
+        TxtWorkers.text = "Workers: <b>" + WorkerManager.WorkerCount + "</b>";
         TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Time.time) / 64f) + " days</b>";
-        TxtPaydayAmount.text = "Payday Cost: <b>$" + (Warehouse.WorkerCount * Warehouse.Wage).ToString("F2") + "</b>";
+        TxtPaydayAmount.text = "Payday Cost: <b>$" + (WorkerManager.WorkerCount * Warehouse.Wage).ToString("F2") + "</b>";
         TxtTotalStock.text = "Total Stock: <b>" + (Warehouse.StockRacked + Warehouse.StockPicked + Warehouse.StockUnloaded) + "</b>";
         TxtStockRacked.text = Warehouse.StockRacked.ToString();
         TxtStockUnloaded.text = Warehouse.StockUnloaded.ToString();

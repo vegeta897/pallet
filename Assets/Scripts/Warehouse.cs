@@ -11,19 +11,16 @@ public class Warehouse : MonoBehaviour
     public event ActionItemRemoved OnActionItemRemoved;
 
     private decimal money = 2000;
-    private int workerCount = 0;
     private decimal wage = 50;
     private int stockRacked = 0;
     private int stockPicked = 0;
     private int stockUnloaded = 0;
     private List<ActionItem> actionItems = new List<ActionItem>();
-    private List<Worker> workers = new List<Worker>();
     private int lastDeliveryID = 0;
     private int lastOrderID = 0;
-    private int lastWorkerID = 0;
 
     public float Timescale = 1;
-    public Worker PrefabWorker;
+    public WorkerManager WorkerManager;
 
     public decimal Money
     {
@@ -34,17 +31,6 @@ public class Warehouse : MonoBehaviour
         set 
         {
             money = value;
-        }
-    }
-    public int WorkerCount
-    {
-        get
-        {
-            return workerCount;
-        }
-        set
-        {
-            workerCount = value;
         }
     }
     public decimal Wage
@@ -99,24 +85,6 @@ public class Warehouse : MonoBehaviour
     private int DeliveryInterval;
     private int OrderInterval;
 
-    public Worker HireWorker()
-    {
-        workerCount += 1;
-        lastWorkerID += 1;
-        Worker newWorker = Instantiate(PrefabWorker) as Worker;
-        newWorker.Init(lastWorkerID);
-        newWorker.transform.SetParent(gameObject.transform, false);
-        workers.Add(newWorker);
-        return newWorker;
-    }
-
-    public void FireWorker(Worker firedWorker)
-    {
-        workerCount -= 1;
-        workers.Remove(firedWorker);
-        GameObject.Destroy(firedWorker.gameObject);
-    }
-
     public void AcceptItem(ActionItem item)
     {
         money -= item.Type == "delivery" ? item.Quantity * 15 : 0;
@@ -155,10 +123,10 @@ public class Warehouse : MonoBehaviour
                 int seconds = Mathf.FloorToInt(Time.time);
                 if (seconds % (PaydayInterval) == 0) // If it is payday
                 {
-                    money -= workerCount * 50;
+                    money -= WorkerManager.WorkerCount * 50;
                     NextPayday = seconds + PaydayInterval;
                 }
-                if (seconds % (DeliveryInterval) == 0 || seconds == 1) // Create an order on start
+                if (DeliveryInterval == 0 || seconds % DeliveryInterval == 0) // Create an order on start
                 {
                     Delivery newDelivery = ScriptableObject.CreateInstance("Delivery") as Delivery;
                     lastDeliveryID += 1;
@@ -166,7 +134,7 @@ public class Warehouse : MonoBehaviour
                     AddActionItem(newDelivery);
                     DeliveryInterval = Random.Range(3, 5) * 60; // Next request in 3-5 days
                 }
-                if (seconds % (OrderInterval) == 0)
+                if (seconds % OrderInterval == 0)
                 {
                     int newOrderCount = Random.Range(0, 2);
                     for(int i = 0; i < newOrderCount; i++)
@@ -180,6 +148,9 @@ public class Warehouse : MonoBehaviour
                 int busyWorkers = 0;
                 for (int i = actionItems.Count-1; i >= 0; i--) // Process current deliveries and orders
                 {
+
+                    // TODO: Send actionable deliveries and orders to WorkerManager with AddTask
+
                     ActionItem item = actionItems[i];
                     if(item.Type == "delivery")
                     {
@@ -194,7 +165,7 @@ public class Warehouse : MonoBehaviour
                         }
                         else if(item.Status == "unloading")
                         {
-                            int thisStockUnloaded = Mathf.Min((item.Quantity - d.QtyUnloaded), workerCount - busyWorkers);
+                            int thisStockUnloaded = Mathf.Min((item.Quantity - d.QtyUnloaded), WorkerManager.WorkerCount - busyWorkers);
                             stockUnloaded += thisStockUnloaded;
                             d.QtyUnloaded += thisStockUnloaded;
                             busyWorkers += thisStockUnloaded;
@@ -210,7 +181,7 @@ public class Warehouse : MonoBehaviour
                         Order o = item as Order;
                         if(item.Status == "picking")
                         {
-                            int thisStockPicked = Mathf.Min((item.Quantity - o.QtyPicked), workerCount - busyWorkers);
+                            int thisStockPicked = Mathf.Min((item.Quantity - o.QtyPicked), WorkerManager.WorkerCount - busyWorkers);
                             thisStockPicked = Mathf.Min(thisStockPicked, stockRacked);
                             stockRacked -= thisStockPicked;
                             stockPicked += thisStockPicked;
@@ -223,7 +194,7 @@ public class Warehouse : MonoBehaviour
                         }
                         else if (item.Status == "loading")
                         {
-                            int thisStockLoaded = Mathf.Min((item.Quantity - o.QtyLoaded), workerCount - busyWorkers);
+                            int thisStockLoaded = Mathf.Min((item.Quantity - o.QtyLoaded), WorkerManager.WorkerCount - busyWorkers);
                             thisStockLoaded = Mathf.Min(thisStockLoaded, stockPicked);
                             stockPicked -= thisStockLoaded;
                             o.QtyLoaded += thisStockLoaded;
@@ -241,7 +212,7 @@ public class Warehouse : MonoBehaviour
                     }
                 }
                 // If workers are free after handling orders/deliveries, transfer unloaded stock to racks
-                int thisStockRacked = Mathf.Min(workerCount - busyWorkers, stockUnloaded);
+                int thisStockRacked = Mathf.Min(WorkerManager.WorkerCount - busyWorkers, stockUnloaded);
                 stockUnloaded -= thisStockRacked;
                 stockRacked += thisStockRacked;
             }
@@ -255,10 +226,6 @@ public class Warehouse : MonoBehaviour
 
 	void Start ()
     {
-        foreach (Transform child in gameObject.transform) // Remove editor placeholder
-        {
-            GameObject.Destroy(child.gameObject);
-        }
 
         NextPayday = PaydayInterval;
         OrderInterval = 60; // Every day
