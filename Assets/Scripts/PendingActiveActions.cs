@@ -15,37 +15,13 @@ public class PendingActiveActions : MonoBehaviour
     public Button BtnOption1;
     public Text TxtOption1;
 
-    // TODO: Implement a linear flow for orders and deliveries, which they can move through forwards or back
     public void Accept()
     {
-        string origStatus = selectedItem.Status;
-        if (origStatus == "new")
+        selectedItem.StepForward();
+        if (selectedItem.Status == "accepted")
         {
-            selectedItem.Status = "accepted";
             UIManager.AcceptItem(selectedItem);
             gameObject.SetActive(false);
-        }
-        if (selectedItem.Type == "delivery")
-        {
-            if (origStatus == "delivered")
-            {
-                selectedItem.Status = "unloading";
-            }
-        }
-        else if (selectedItem.Type == "order")
-        {
-            if (origStatus == "accepted")
-            {
-                selectedItem.Status = "picking";
-            }
-            if (origStatus == "picked")
-            {
-                selectedItem.Status = "loading";
-            }
-            if (origStatus == "loaded")
-            {
-                selectedItem.Status = "shipping";
-            }
         }
     }
 

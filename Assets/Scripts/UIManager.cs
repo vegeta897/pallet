@@ -180,7 +180,7 @@ public class UIManager : MonoBehaviour
         TxtStockRacked.text = Warehouse.StockRacked.ToString();
         TxtStockUnloaded.text = Warehouse.StockUnloaded.ToString();
         TxtStockPicked.text = Warehouse.StockPicked.ToString();
-        TxtTime.text = (Warehouse.Hour() % 12 == 0 ? 12 : Warehouse.Hour() % 12) + ":00";
-        TxtTimeAMPM.text = Warehouse.Hour() % 24 > 11 ? "PM" : "AM";
+        TxtTime.text = (Utility.Hour() % 12 == 0 ? 12 : Utility.Hour() % 12) + ":00";
+        TxtTimeAMPM.text = Utility.Hour() % 24 > 11 ? "PM" : "AM";
     }
 }

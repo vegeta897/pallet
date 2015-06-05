@@ -38,6 +38,6 @@ public class BtnWorker : MonoBehaviour, IPointerClickHandler
 	
 	void Update () 
     {
-	    
+        TxtStatus.text = worker.Status();
 	}
 }

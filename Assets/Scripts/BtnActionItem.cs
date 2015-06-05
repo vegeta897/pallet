@@ -54,7 +54,10 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
         {
             uiManager.OnActionItemSelected -= ActionItemSelected;
         }
-        thisButton.colors = item == selectedActionItem ? selectedColors : defaultColors;
+        else
+        {
+            thisButton.colors = item == selectedActionItem ? selectedColors : defaultColors;
+        }
     }
 
     public void OnPointerClick(PointerEventData data)

@@ -5598,7 +5598,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fc7f5f51c496784da6a2ad242f89f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Warehouse: {fileID: 1592914152}
   PrefabWorker: {fileID: 11458352, guid: 119b0dea370c48047927829b47b04e0c, type: 2}
+  StockRacking: 0
 --- !u!4 &1948072922
 Transform:
   m_ObjectHideFlags: 0
