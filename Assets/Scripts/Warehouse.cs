@@ -139,7 +139,7 @@ public class Warehouse : MonoBehaviour
         while(true)
         {
             yield return new WaitForSeconds(1f);
-            int seconds = Mathf.FloorToInt(Time.time);
+            int seconds = Mathf.FloorToInt(Utility.GetTime());
             if (seconds % (PaydayInterval) == 0) // If it is payday
             {
                 money -= WorkerManager.WorkerCount * 50;

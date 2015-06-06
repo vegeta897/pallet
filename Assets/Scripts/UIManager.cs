@@ -174,7 +174,7 @@ public class UIManager : MonoBehaviour
     {
         TxtMoney.text = "<b>$" + Warehouse.Money.ToString("F2") + "</b>";
         TxtWorkers.text = "Workers: <b>" + WorkerManager.WorkerCount + "</b>";
-        TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Time.time) / 64f) + " days</b>";
+        TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Utility.GetTime()) / 64f) + " days</b>";
         TxtPaydayAmount.text = "Payday Cost: <b>$" + (WorkerManager.WorkerCount * Warehouse.Wage).ToString("F2") + "</b>";
         TxtTotalStock.text = "Total Stock: <b>" + (Warehouse.StockRacked + Warehouse.StockPicked + Warehouse.StockUnloaded) + "</b>";
         TxtStockRacked.text = Warehouse.StockRacked.ToString();
@@ -182,5 +182,10 @@ public class UIManager : MonoBehaviour
         TxtStockPicked.text = Warehouse.StockPicked.ToString();
         TxtTime.text = (Utility.Hour() % 12 == 0 ? 12 : Utility.Hour() % 12) + ":00";
         TxtTimeAMPM.text = Utility.Hour() % 24 > 11 ? "PM" : "AM";
+    }
+
+    public void Reset()
+    {
+        Application.LoadLevel("MenuScene");
     }
 }

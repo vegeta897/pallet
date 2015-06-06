@@ -14,11 +14,7 @@ public abstract class ActionItem : ScriptableObject
     internal int Quantity;
     internal int ID;
     internal int WorkerCount = 0;
-    public virtual string Status
-    {
-        get;
-        set;
-    }
+    public virtual string Status { get; set; }
 
     protected abstract void BeginStep();
     public abstract float TimeRemaining();

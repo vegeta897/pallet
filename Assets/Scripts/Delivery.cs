@@ -62,11 +62,11 @@ public class Delivery : ActionItem
         switch (status)
         {
             case "accepted":
-                acceptTime = Time.time;
+                acceptTime = Utility.GetTime();
                 break;
             case "delivering":
                 DeliveryTime = 60; // 1 day
-                deliveryDepartTime = Time.time;
+                deliveryDepartTime = Utility.GetTime();
                 break;
             case "delivered":
 
@@ -79,7 +79,7 @@ public class Delivery : ActionItem
 
     public override float TimeRemaining()
     {
-        return deliveryDepartTime + DeliveryTime - Time.time;
+        return deliveryDepartTime + DeliveryTime - Utility.GetTime();
     }
     public override bool NeedWorkers()
     {

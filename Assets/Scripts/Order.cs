@@ -71,7 +71,7 @@ public class Order : ActionItem
         switch (status)
         {
             case "accepted":
-                acceptTime = Time.time;
+                acceptTime = Utility.GetTime();
                 break;
             case "picking":
 
@@ -86,7 +86,7 @@ public class Order : ActionItem
 
                 break;
             case "shipping":
-                shipTime = Time.time;
+                shipTime = Utility.GetTime();
                 ShippingTime = 60; // 1 day
                 break;
         }
@@ -94,7 +94,7 @@ public class Order : ActionItem
 
     public override float TimeRemaining()
     {
-        return shipTime + ShippingTime - Time.time;
+        return shipTime + ShippingTime - Utility.GetTime();
     }
     public override bool NeedWorkers()
     {
