@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
-public class Rack : MonoBehaviour
+public class Rack : ScriptableObject
 {
 
     private class Shelf
@@ -39,24 +41,47 @@ public class Rack : MonoBehaviour
         private float maxWidth;
         public float MaxWidth
         {
-          get { return maxWidth; }
-          set { maxWidth = value; }
+            get { return maxWidth; }
+            set { maxWidth = value; }
         }
 
         public Shelf(float numPalletWidths, int maxWeight)
         {
+            StoredItems = new List<StorageItem>();
+
             ShelfMaxWeight = maxWeight;
-            maxWidth = numPalletWidths;
+            RemainingWeight = maxWeight;
+            MaxWidth = numPalletWidths;
+            AvailableWidth = numPalletWidths;
         }
-        
-        public bool PutItem(StorageItem item)
+
+        public void UpdateWeight()
         {
-            if (AvailableWidth + item.Width <= MaxWidth &&
-                RemainingWeight + item.Weight <= ShelfMaxWeight)
+            var weight = 0;
+
+            foreach (var storedItem in StoredItems)
+            {
+                weight += storedItem.Weight;
+            }
+
+            RemainingWeight = ShelfMaxWeight - weight;
+        }
+
+        private bool CheckSpace(StorageItem item)
+        {
+            return (AvailableWidth - item.Width >= 0 &&
+                    RemainingWeight - item.Weight >= 0);
+        }
+
+        public bool PutStorageItem(StorageItem item)
+        {
+            if (CheckSpace(item))
             {
                 StoredItems.Add(item);
                 AvailableWidth -= item.Width;
                 RemainingWeight -= item.Weight;
+
+                Debug.Log(String.Format("Putting Item. Weight: {0} - Available Weight: {0}", item.Weight, RemainingWeight));
 
                 return true;
             }
@@ -64,15 +89,15 @@ public class Rack : MonoBehaviour
             return false;
         }
 
-        public StorageItem GetItem(StorageItem item)
+        public StorageItem GetStorageItem(StorageItem.StorageItemType item)
         {
-            var storedItem = StoredItems.Find(i => i == item);
+            var storedItem = StoredItems.Find(i => i.ItemType == item);
             if (storedItem != null)
             {
                 // Found item. Remove from inventory and alter capacity.
                 StoredItems.Remove(storedItem);
-                AvailableWidth += item.Width;
-                RemainingWeight += item.Weight;
+                AvailableWidth += storedItem.Width;
+                RemainingWeight += storedItem.Weight;
 
                 return storedItem;
             }
@@ -81,7 +106,34 @@ public class Rack : MonoBehaviour
             return null;
         }
 
-        // Method to check if shelf has any free room to put a storage item.
+
+        public int GetGoods(int quantity)
+        {
+            var storageItem = StoredItems.FirstOrDefault(storage => storage.StoredGoods >= quantity);
+
+            if (storageItem != null)
+            {
+                storageItem.RemoveGoods(quantity);
+                UpdateWeight();
+                return quantity;
+            }
+
+            return 0;
+        }
+
+        public bool PutGoods(int quantity)
+        {
+            var storageItem = StoredItems.FirstOrDefault(storage => storage.AddGoods(quantity));
+
+            if (storageItem != null)
+            {
+                Debug.Log("Put goods in: " + storageItem.ItemType);
+                UpdateWeight();
+                return true;
+            }
+
+            return false;
+        }
     }
 
 
@@ -108,20 +160,82 @@ public class Rack : MonoBehaviour
         }
     }
 
-    public Rack(float numPalletWidths, int totalHeight, int numShelves, int maxCapacity)
+    // Temporary. instead of returning an int, will return actual goods.
+    public int GetGoods(int quantity)
     {
-        for (int i = 1; i <= numShelves; i++)
+        foreach (var shelf in Shelves)
         {
-            Shelves.Add(i, new Shelf(numPalletWidths, numShelves / maxCapacity));
+            var returnValue = shelf.Value.GetGoods(quantity);
+
+            if (returnValue == quantity)
+            {
+                return returnValue;
+            }
         }
+
+        return 0;
     }
 
-    // Method to check if item exists. Delegate object may be able to be used?
-
-    // GetGoods()
 
     // PutGoods()
+    public bool PutGoods(int quantity)
+    {
+        foreach (var shelf in Shelves)
+        {
+            if (shelf.Value.PutGoods(quantity))
+            {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    public StorageItem GetStorageItem(StorageItem.StorageItemType type)
+    {
+        foreach (var shelf in Shelves)
+        {
+            StorageItem item = shelf.Value.GetStorageItem(type);
+
+            if (item != null)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public bool PutStorageItem(StorageItem item)
+    {
+        foreach (var shelf in Shelves)
+        {
+            if (shelf.Value.PutStorageItem(item))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public override string ToString()
+    {
+        return String.Format("Number of Shelves Free: {0} - Available Width: {1} - Current Weight: {2} - Remaining Weight: {3}", Shelves.Count(s => s.Value.AvailableWidth > 0),
+                                                                                                                                 Shelves.Sum(s => s.Value.AvailableWidth),
+                                                                                                                                 Shelves.Sum(s => s.Value.ShelfMaxWeight - s.Value.RemainingWeight),
+                                                                                                                                 Shelves.Sum(s => s.Value.RemainingWeight));
+    }
+
+    public void Initialize(float numPalletWidths, int totalHeight, int numShelves, int maxCapacity)
+    {
+        Shelves = new Dictionary<int, Shelf>();
+
+        for (int i = 1; i <= numShelves; i++)
+        {
+            Shelves.Add(i, new Shelf(numPalletWidths, maxCapacity / numShelves));
+        }
+    }
 
 
 

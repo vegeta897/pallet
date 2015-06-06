@@ -1,9 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-public class StorageItem : MonoBehaviour
+public class StorageItem : ScriptableObject
 {
+    public enum StorageItemType
+    {
+        Pallet,
+        Bin
+    }
+
+
+    private StorageItemType itemType;
+    public StorageItemType ItemType
+    {
+        get { return itemType; }
+        private set { itemType = value; }
+    }
+
+
     // Temporary
     private int storedGoods;
     public int StoredGoods
@@ -47,15 +63,6 @@ public class StorageItem : MonoBehaviour
         set { maxWeight = value; }
     }
 
-    public StorageItem(float width = 1, int weight = 15, int maxWeight = 1000, int storedItemBaseWeight = 1)
-    {
-        StoredGoods = 0;
-        BaseWeight = weight;
-        MaxWeight = maxWeight;
-        Width = width;
-        StoredGoodBaseWeight = storedItemBaseWeight;
-    }
-
     // Temporary
     public int RemoveGoods(int quantity)
     {
@@ -70,6 +77,9 @@ public class StorageItem : MonoBehaviour
 
     public bool AddGoods(int quantity)
     {
+        Debug.Log("Attempting to add goods in: " + ItemType);
+        Debug.Log(String.Format("Weight: {0} Quantity: {1} StoredGoodBaseWeight: {2} MaxWeight: {3}", Weight, quantity, StoredGoodBaseWeight, MaxWeight));
+
         if (Weight + (quantity * StoredGoodBaseWeight) <= MaxWeight)
         {
             StoredGoods += quantity;
@@ -77,6 +87,16 @@ public class StorageItem : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void Initialize(StorageItemType itemType, float width = 1, int weight = 15, int maxWeight = 1000, int storedItemBaseWeight = 1)
+    {
+        ItemType = itemType;
+        StoredGoods = 0;
+        BaseWeight = weight;
+        MaxWeight = maxWeight;
+        Width = width;
+        StoredGoodBaseWeight = storedItemBaseWeight;
     }
 
 
