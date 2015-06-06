@@ -156,7 +156,7 @@ public class Order : ActionItem
             case "new":
                 return "Accept";
             case "accepted":
-                return "Accepted";
+                return "Pick";
             case "picking":
                 return "Picking";
             case "picked":
