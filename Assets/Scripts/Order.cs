@@ -100,22 +100,29 @@ public class Order : ActionItem
     {
         return status == "picking" || status == "loading";
     }
-    public override bool StepComplete()
+    public override void AutoStep()
     {
-        bool complete = false;
         switch (status)
         {
             case "picking":
-                complete = qtyPicked == Quantity;
+                if(qtyPicked == Quantity)
+                {
+                    StepForward();
+                }
                 break;
             case "loading":
-                complete = qtyLoaded == Quantity;
+                if (qtyLoaded == Quantity)
+                {
+                    StepForward();
+                }
                 break;
             case "shipping":
-                complete = TimeRemaining() <= 0;
+                if (TimeRemaining() <= 0)
+                {
+                    StepForward();
+                }
                 break;
         }
-        return complete;
     }
     public override int QtyTime()
     {
@@ -141,5 +148,45 @@ public class Order : ActionItem
     public override bool CanDoStep(int stockRacked)
     {
         return status != "picking" || stockRacked - WorkerCount > 0;
+    }
+    public override string ForwardText()
+    {
+        switch (status)
+        {
+            case "new":
+                return "Accept";
+            case "accepted":
+                return "Accepted";
+            case "picking":
+                return "Picking";
+            case "picked":
+                return "Load";
+            case "loading":
+                return "Loading";
+            case "loaded":
+                return "Ship";
+            case "shipping":
+                return "Shipping";
+            case "complete":
+                return "Complete";
+            default:
+                return "";
+        }
+    }
+    public override bool WaitingForInput()
+    {
+        switch (status)
+        {
+            case "new":
+                return true;
+            case "accepted":
+                return true;
+            case "picked":
+                return true;
+            case "loaded":
+                return true;
+            default:
+                return false;
+        }
     }
 }

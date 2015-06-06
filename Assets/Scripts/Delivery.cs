@@ -85,22 +85,29 @@ public class Delivery : ActionItem
     {
         return status == "unloading";
     }
-    public override bool StepComplete()
+    public override void AutoStep()
     {
-        bool complete = false;
         switch (status)
         {
             case "accepted":
-                complete = Utility.Hour() < 17 && Utility.Hour() > 4;
+                if (Utility.Hour() < 17 && Utility.Hour() > 4)
+                {
+                    StepForward();
+                }
                 break;
             case "delivering":
-                complete = TimeRemaining() <= 0;
+                if (TimeRemaining() <= 0)
+                {
+                    StepForward();
+                }
                 break;
             case "unloading":
-                complete = qtyUnloaded == Quantity;
+                if (qtyUnloaded == Quantity)
+                {
+                    StepForward();
+                }
                 break;
         }
-        return complete;
     }
     public override int QtyTime()
     {
@@ -121,5 +128,37 @@ public class Delivery : ActionItem
     public override bool CanDoStep(int stockRacked)
     {
         return status != "unloading" || (Quantity-qtyUnloaded) - WorkerCount > 0;
+    }
+    public override string ForwardText()
+    {
+        switch(status)
+        {
+            case "new":
+                return "Accept";
+            case "accepted":
+                return "Accepted";
+            case "delivering":
+                return "Delivering";
+            case "delivered":
+                return "Unload";
+            case "unloading":
+                return "Unloading";
+            case "complete":
+                return "Complete";
+            default:
+                return "";
+        }
+    }
+    public override bool WaitingForInput()
+    {
+        switch (status)
+        {
+            case "new":
+                return true;
+            case "delivered":
+                return true;
+            default:
+                return false;
+        }
     }
 }

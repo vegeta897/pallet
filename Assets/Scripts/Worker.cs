@@ -66,13 +66,7 @@ public class Worker : MonoBehaviour
 
     void Update()
     {
-        if(Task.ActionItem != null)
-        {
-            if (!Task.ActionItem.NeedWorkers() || Task.ActionItem.StepComplete())
-            {
-                Task.ActionItem = null;
-            }
-        }
+        Task.ActionItem = Task.ActionItem != null && Task.ActionItem.NeedWorkers() ? Task.ActionItem : null;
     }
 
     public void Init(int id)

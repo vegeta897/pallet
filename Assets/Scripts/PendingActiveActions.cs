@@ -59,53 +59,8 @@ public class PendingActiveActions : MonoBehaviour
     {
         if(selectedItem != null)
         {
-            BtnAccept.gameObject.SetActive(true);
-
-            if (selectedItem.Type == "delivery")
-            {
-                switch (selectedItem.Status)
-                {
-                    case "new":
-                        TxtAccept.text = "Accept";
-                        break;
-                    case "accepted":
-                        BtnAccept.gameObject.SetActive(false);
-                        break;
-                    case "delivering":
-                        BtnAccept.gameObject.SetActive(false);
-                        break;
-                    case "delivered":
-                        TxtAccept.text = "Unload";
-                        break;
-                }
-            }
-            else if (selectedItem.Type == "order")
-            {
-                switch (selectedItem.Status)
-                {
-                    case "new":
-                        TxtAccept.text = "Accept";
-                        break;
-                    case "accepted":
-                        TxtAccept.text = "Pick";
-                        break;
-                    case "picking":
-                        BtnAccept.gameObject.SetActive(false);
-                        break;
-                    case "picked":
-                        TxtAccept.text = "Load";
-                        break;
-                    case "loading":
-                        BtnAccept.gameObject.SetActive(false);
-                        break;
-                    case "loaded":
-                        TxtAccept.text = "Ship";
-                        break;
-                    case "shipping":
-                        BtnAccept.gameObject.SetActive(false);
-                        break;
-                }
-            }
+            BtnAccept.interactable = selectedItem.WaitingForInput();
+            TxtAccept.text = selectedItem.ForwardText();
         }
     }
 }

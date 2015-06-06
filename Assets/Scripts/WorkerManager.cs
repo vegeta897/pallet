@@ -67,10 +67,7 @@ public class WorkerManager : MonoBehaviour
         {
             for (int i = actionItems.Count - 1; i >= 0; i--) // Process current deliveries and orders
             {
-                if (actionItems[i].StepComplete()) // If current step complete
-                {
-                    actionItems[i].StepForward(); // Move to next step
-                }
+                actionItems[i].AutoStep(); // If step complete, move to next
                 if (actionItems[i].NeedWorkers()) // If task needs workers
                 {
                     if (!actionItems[i].CanDoStep(Warehouse.StockRacked))

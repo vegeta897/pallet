@@ -23,10 +23,12 @@ public abstract class ActionItem : ScriptableObject
     protected abstract void BeginStep();
     public abstract float TimeRemaining();
     public abstract bool NeedWorkers(); // If true, the current step needs workers
-    public abstract bool StepComplete(); // If true, ready to automatically StepForward
+    public abstract void AutoStep(); // Move to next step if current complete
     public abstract int QtyTime(); // Amount of time it takes to process 1 quantity
     public abstract void ProcessStock(int qty); // Process the specified qty in current step
     public abstract bool CanDoStep(int stockRacked); // Enough stock to pick for an order
+    public abstract string ForwardText(); // Text to display on "accept" button for current step
+    public abstract bool WaitingForInput(); // If true, user input needed to step forward
 
     public void StepForward() // Move to the next step in the progression
     {

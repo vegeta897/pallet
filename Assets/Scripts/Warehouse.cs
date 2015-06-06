@@ -134,8 +134,6 @@ public class Warehouse : MonoBehaviour
         ScriptableObject.Destroy(removedActionItem);
     }
 
-    
-
     IEnumerator DoTick()
     {
         while(true)
