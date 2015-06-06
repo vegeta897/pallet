@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public Button Btn2x;
     public Button Btn4x;
     public Button Btn8x;
+    public GameObject PanGameOver;
     public Text TxtMoney;
     public Text TxtWorkers;
     public Text TxtUntilPayday;
@@ -91,7 +92,7 @@ public class UIManager : MonoBehaviour
 
     public void SetWage()
     {
-        Warehouse.Wage = (decimal)Mathf.Round(float.Parse(InpWage.text) * 100) / 100;
+        Warehouse.Wage = (decimal)Mathf.Max(7.5f,Mathf.Round(float.Parse(InpWage.text) * 100) / 100);
         InpWage.text = Warehouse.Wage.ToString("F2");
     }
 
@@ -141,6 +142,9 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        PanGameOver.SetActive(false);
+        Warehouse.OnGameOver += GameOver;
+
         Warehouse.OnActionItemAdded += ActionItemAdded;
         Warehouse.OnActionItemRemoved += ActionItemRemoved;
 
@@ -175,7 +179,7 @@ public class UIManager : MonoBehaviour
         TxtMoney.text = "<b>$" + Warehouse.Money.ToString("F2") + "</b>";
         TxtWorkers.text = "Workers: <b>" + WorkerManager.WorkerCount + "</b>";
         TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Utility.GetTime()) / 64f) + " days</b>";
-        TxtPaydayAmount.text = "Payday Cost: <b>$" + (WorkerManager.WorkerCount * Warehouse.Wage).ToString("F2") + "</b>";
+        TxtPaydayAmount.text = "Payday Cost: <b>$" + (WorkerManager.WorkerCount * Warehouse.Wage * 10 * 8).ToString("F2") + "</b>";
         TxtTotalStock.text = "Total Stock: <b>" + (Warehouse.StockRacked + Warehouse.StockPicked + Warehouse.StockUnloaded) + "</b>";
         TxtStockRacked.text = Warehouse.StockRacked.ToString();
         TxtStockUnloaded.text = Warehouse.StockUnloaded.ToString();
@@ -187,5 +191,9 @@ public class UIManager : MonoBehaviour
     public void Reset()
     {
         Application.LoadLevel("MenuScene");
+    }
+    private void GameOver()
+    {
+        PanGameOver.SetActive(true);
     }
 }
