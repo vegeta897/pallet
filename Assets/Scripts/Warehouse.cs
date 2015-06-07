@@ -4,14 +4,16 @@ using System.Collections.Generic;
 
 public delegate void ActionItemAdded(ActionItem newActionItem);
 public delegate void ActionItemRemoved(ActionItem removedActionItem);
+public delegate void GameOver();
 
 public class Warehouse : MonoBehaviour
 {
     public event ActionItemAdded OnActionItemAdded;
     public event ActionItemRemoved OnActionItemRemoved;
+    public event GameOver OnGameOver;
 
     private decimal money = 2000;
-    private decimal wage = 50;
+    private decimal wage = 8;
     private int stockRacked = 0;
     private int stockPicked = 0;
     private int stockUnloaded = 0;
@@ -139,10 +141,10 @@ public class Warehouse : MonoBehaviour
         while(true)
         {
             yield return new WaitForSeconds(1f);
-            int seconds = Mathf.FloorToInt(Time.time);
+            int seconds = Mathf.FloorToInt(Utility.GetTime());
             if (seconds % (PaydayInterval) == 0) // If it is payday
             {
-                money -= WorkerManager.WorkerCount * 50;
+                money -= WorkerManager.WorkerCount * wage * 10 * 8;
                 NextPayday = seconds + PaydayInterval;
             }
             if (DeliveryInterval == 0 || seconds % DeliveryInterval == 0) // Create delivery on start
@@ -182,6 +184,9 @@ public class Warehouse : MonoBehaviour
 	
 	void Update ()
     {
-
+        if(money < 0)
+        {
+            OnGameOver();
+        }
 	}
 }
