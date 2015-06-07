@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public Button Btn2x;
     public Button Btn4x;
     public Button Btn8x;
+    public GameObject PanGameOver;
     public Text TxtMoney;
     public Text TxtWorkers;
     public Text TxtUntilPayday;
@@ -91,7 +92,7 @@ public class UIManager : MonoBehaviour
 
     public void SetWage()
     {
-        Warehouse.Wage = (decimal)Mathf.Round(float.Parse(InpWage.text) * 100) / 100;
+        Warehouse.Wage = (decimal)Mathf.Max(7.5f,Mathf.Round(float.Parse(InpWage.text) * 100) / 100);
         InpWage.text = Warehouse.Wage.ToString("F2");
     }
 
@@ -141,6 +142,9 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        PanGameOver.SetActive(false);
+        Warehouse.OnGameOver += GameOver;
+
         Warehouse.OnActionItemAdded += ActionItemAdded;
         Warehouse.OnActionItemRemoved += ActionItemRemoved;
 
@@ -172,15 +176,24 @@ public class UIManager : MonoBehaviour
 
     void LateUpdate()
     {
-        TxtMoney.text = "<b>$" + Warehouse.Money.ToString("F2") + "</b>";
-        TxtWorkers.text = "Workers: <b>" + WorkerManager.WorkerCount + "</b>";
-        TxtUntilPayday.text = "Next Payday: <b>" + Mathf.CeilToInt((float)(Warehouse.NextPayday - Time.time) / 64f) + " days</b>";
-        TxtPaydayAmount.text = "Payday Cost: <b>$" + (WorkerManager.WorkerCount * Warehouse.Wage).ToString("F2") + "</b>";
-        TxtTotalStock.text = "Total Stock: <b>" + (Warehouse.StockRacked + Warehouse.StockPicked + Warehouse.StockUnloaded) + "</b>";
+        TxtMoney.text = "$" + Warehouse.Money.ToString("N0");
+        TxtWorkers.text = "<b>" + WorkerManager.WorkerCount + "</b> worker" + (WorkerManager.WorkerCount == 1 ? "" : "s");
+        TxtUntilPayday.text = Mathf.CeilToInt((float)(Warehouse.NextPayday - Utility.GetTime()) / 64f) + " days";
+        TxtPaydayAmount.text = "$" + (WorkerManager.WorkerCount * Warehouse.Wage * 10 * 8).ToString("N0");
+        TxtTotalStock.text = "<b>" + (Warehouse.StockRacked + Warehouse.StockPicked + Warehouse.StockUnloaded) + "</b> stock";
         TxtStockRacked.text = Warehouse.StockRacked.ToString();
         TxtStockUnloaded.text = Warehouse.StockUnloaded.ToString();
         TxtStockPicked.text = Warehouse.StockPicked.ToString();
         TxtTime.text = (Utility.Hour() % 12 == 0 ? 12 : Utility.Hour() % 12) + ":00";
         TxtTimeAMPM.text = Utility.Hour() % 24 > 11 ? "PM" : "AM";
+    }
+
+    public void Reset()
+    {
+        Application.LoadLevel("MenuScene");
+    }
+    private void GameOver()
+    {
+        PanGameOver.SetActive(true);
     }
 }

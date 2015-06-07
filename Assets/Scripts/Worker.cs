@@ -19,11 +19,11 @@ public class Worker : MonoBehaviour
     {
         if (Task.ActionItem != null)
         {
-            return Task.ActionItem.Status.Substring(0, 1).ToUpper() + Task.ActionItem.Status.Substring(1, Task.ActionItem.Status.Length - 1) + " Stock";
+            return Task.ActionItem.Status.Substring(0, 1).ToUpper() + Task.ActionItem.Status.Substring(1, Task.ActionItem.Status.Length - 1);
         }
         else if (Task.QtyToRack > 0)
         {
-            return "Racking Stock";
+            return "Racking";
         }
         else
         {
