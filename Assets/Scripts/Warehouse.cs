@@ -13,7 +13,6 @@ public class Warehouse : MonoBehaviour
     public event GameOver OnGameOver;
 
     private decimal money = 2000;
-    private decimal wage = 8;
     private int stockRacked = 0;
     private int stockPicked = 0;
     private int stockUnloaded = 0;
@@ -33,17 +32,6 @@ public class Warehouse : MonoBehaviour
         set 
         {
             money = value;
-        }
-    }
-    public decimal Wage
-    {
-        get
-        {
-            return wage;
-        }
-        set
-        {
-            wage = value;
         }
     }
     public int StockRacked
@@ -144,7 +132,7 @@ public class Warehouse : MonoBehaviour
             int seconds = Mathf.FloorToInt(Utility.GetTime());
             if (seconds % (PaydayInterval) == 0) // If it is payday
             {
-                money -= WorkerManager.WorkerCount * wage * 10 * 8;
+                money -= WorkerManager.PaydayAmount();
                 NextPayday = seconds + PaydayInterval;
             }
             if (DeliveryInterval == 0 || seconds % DeliveryInterval == 0) // Create delivery on start

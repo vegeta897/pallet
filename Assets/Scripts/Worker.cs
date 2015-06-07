@@ -7,6 +7,7 @@ public class Worker : MonoBehaviour
 
     public int ID;
     public WorkerTask Task;
+    public decimal Wage;
 
     private float fatigue = 0;
 
@@ -69,9 +70,10 @@ public class Worker : MonoBehaviour
         Task.ActionItem = Task.ActionItem != null && Task.ActionItem.NeedWorkers() ? Task.ActionItem : null;
     }
 
-    public void Init(int id)
+    public void Init(int id, decimal wage)
     {
         ID = id;
+        Wage = wage;
         StartCoroutine(TaskWork());
     }
 }

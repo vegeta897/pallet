@@ -14,22 +14,16 @@ public class WorkerManager : MonoBehaviour
     public int StockRacking = 0;
     public int WorkerCount
     {
-        get
-        {
-            return workerCount;
-        }
-        set
-        {
-            workerCount = value;
-        }
+        get { return workerCount; }
+        set { workerCount = value; }
     }
 
-    public Worker HireWorker()
+    public Worker HireWorker(decimal wage)
     {
         workerCount += 1;
         lastWorkerID += 1;
         Worker newWorker = Instantiate(PrefabWorker) as Worker;
-        newWorker.Init(lastWorkerID);
+        newWorker.Init(lastWorkerID, wage);
         newWorker.transform.SetParent(gameObject.transform, false);
         newWorker.OnStockProcessed += Warehouse.OnStockProcessed;
         workers.Add(newWorker);
@@ -41,6 +35,16 @@ public class WorkerManager : MonoBehaviour
         workerCount -= 1;
         workers.Remove(firedWorker);
         GameObject.Destroy(firedWorker.gameObject);
+    }
+
+    public decimal PaydayAmount()
+    {
+        decimal totalWage = 0;
+        for (int w = 0; w < workers.Count; w++)
+        {
+            totalWage += workers[w].Wage * 8 * 10;
+        }
+        return totalWage;
     }
 
     IEnumerator HandleTasks()

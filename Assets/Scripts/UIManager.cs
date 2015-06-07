@@ -9,7 +9,6 @@ public class UIManager : MonoBehaviour
     public event ActionItemSelected OnActionItemSelected;
 
     public Warehouse Warehouse;
-    public WorkerManager WorkerManager;
     public Text TxtTime;
     public Text TxtTimeAMPM;
     public Button BtnPause;
@@ -19,17 +18,10 @@ public class UIManager : MonoBehaviour
     public Button Btn8x;
     public GameObject PanGameOver;
     public Text TxtMoney;
-    public Text TxtWorkers;
-    public Text TxtUntilPayday;
-    public Text TxtPaydayAmount;
     public Text TxtTotalStock;
     public Text TxtStockRacked;
     public Text TxtStockUnloaded;
     public Text TxtStockPicked;
-    public WorkerList WorkerList;
-    public Button BtnHire;
-    public Button BtnFire;
-    public InputField InpWage;
     public GameObject PanPendingList;
     public GameObject PanPendingItems;
     public BtnActionItem BtnActionItem;
@@ -40,7 +32,6 @@ public class UIManager : MonoBehaviour
     public PendingActiveActions PanActiveItemActions;
 
     private ActionItem selectedActionItem;
-    private Worker selectedWorker;
     private Dictionary<ActionItem, BtnActionItem> actionItems = new Dictionary<ActionItem, BtnActionItem>();
 
     public void SetTimescale(int multi)
@@ -69,31 +60,6 @@ public class UIManager : MonoBehaviour
                 Btn8x.Highlight();
                 break;
         }
-    }
-
-    public void HireWorker()
-    {
-        Worker newWorker = WorkerManager.HireWorker();
-        BtnWorker newBtnWorker = WorkerList.AddWorker(newWorker);
-        newBtnWorker.OnWorkerSelected += WorkerSelected;
-    }
-
-    public void FireWorker()
-    {
-        WorkerManager.FireWorker(selectedWorker);
-        WorkerList.RemoveWorker(selectedWorker);
-    }
-
-    private void WorkerSelected(Worker worker)
-    {
-        selectedWorker = worker;
-        BtnFire.interactable = worker != null;
-    }
-
-    public void SetWage()
-    {
-        Warehouse.Wage = (decimal)Mathf.Max(7.5f,Mathf.Round(float.Parse(InpWage.text) * 100) / 100);
-        InpWage.text = Warehouse.Wage.ToString("F2");
     }
 
     private void ActionItemAdded(ActionItem newActionItem)
@@ -162,11 +128,6 @@ public class UIManager : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
-        foreach (Transform child in WorkerList.transform) // Remove editor placeholder
-        {
-            GameObject.Destroy(child.gameObject);
-        }
-        InpWage.textComponent.alignment = TextAnchor.MiddleRight;
     }
 
     void Update()
@@ -177,9 +138,6 @@ public class UIManager : MonoBehaviour
     void LateUpdate()
     {
         TxtMoney.text = "$" + Warehouse.Money.ToString("N0");
-        TxtWorkers.text = "<b>" + WorkerManager.WorkerCount + "</b> worker" + (WorkerManager.WorkerCount == 1 ? "" : "s");
-        TxtUntilPayday.text = Mathf.CeilToInt((float)(Warehouse.NextPayday - Utility.GetTime()) / 64f) + " days";
-        TxtPaydayAmount.text = "$" + (WorkerManager.WorkerCount * Warehouse.Wage * 10 * 8).ToString("N0");
         TxtTotalStock.text = "<b>" + (Warehouse.StockRacked + Warehouse.StockPicked + Warehouse.StockUnloaded) + "</b> stock";
         TxtStockRacked.text = Warehouse.StockRacked.ToString();
         TxtStockUnloaded.text = Warehouse.StockUnloaded.ToString();
