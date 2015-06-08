@@ -52,7 +52,15 @@ public class WorkerUI : MonoBehaviour
 
     private void WorkerSelected(Worker worker)
     {
+        foreach (KeyValuePair<Worker, BtnWorker> btn in workers)
+        {
+            btn.Value.GetComponent<Button>().Highlight(false);
+        }
         selectedWorker = worker;
+        if(selectedWorker != null)
+        {
+            workers[selectedWorker].GetComponent<Button>().Highlight();
+        }
         BtnFire.interactable = worker != null;
         BtnSetWage.interactable = worker != null;
         InpWage.interactable = worker != null;
