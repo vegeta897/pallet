@@ -26,7 +26,7 @@ public abstract class ActionItem : ScriptableObject
     public abstract string ForwardText(); // Text to display on "accept" button for current step
     public abstract bool WaitingForInput(); // If true, user input needed to step forward
     public abstract string StepDescription(); // Text to display in action item description
-    public abstract float StepProgress();
+    public abstract float StepProgress(); // A number 0 to 1 that represents progress of step
 
     public void StepForward() // Move to the next step in the progression
     {

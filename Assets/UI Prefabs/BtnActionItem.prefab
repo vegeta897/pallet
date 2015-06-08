@@ -106,6 +106,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &199492
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 22477452}
+  - 222: {fileID: 22209608}
+  - 114: {fileID: 11483524}
+  m_Layer: 5
+  m_Name: TxtIcon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!114 &11406646
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -151,7 +168,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Delivery #<b>12</b>'
+  m_Text: Delivery Request
 --- !u!114 &11410724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -177,7 +194,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Arrives in <b>36</b> hours
+  m_Text: The distributor would like to send stock to you
 --- !u!114 &11426096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -272,6 +289,7 @@ MonoBehaviour:
   TxtTitle: {fileID: 11408010}
   TxtDescription: {fileID: 11410724}
   TxtQuantity: {fileID: 11472388}
+  TxtIcon: {fileID: 11483524}
   ImgProgress: {fileID: 11406646}
 --- !u!114 &11472388
 MonoBehaviour:
@@ -311,6 +329,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &11483524
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 199492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: .196078435, g: .196078435, b: .196078435, a: .894117653}
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 70
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: '!'
 --- !u!114 &11490714
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -343,6 +387,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 133954}
+--- !u!222 &22209608
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 199492}
 --- !u!222 &22209710
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -388,7 +438,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: .5}
   m_AnchorMax: {x: 1, y: .5}
   m_AnchoredPosition: {x: -200, y: -25}
-  m_SizeDelta: {x: 180, y: 60}
+  m_SizeDelta: {x: 146, y: 60}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &22458550
 RectTransform:
@@ -407,6 +457,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 330, y: 80}
   m_Pivot: {x: 0, y: 1}
+--- !u!224 &22477452
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 199492}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 22493380}
+  m_RootOrder: 5
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: -245, y: 0}
+  m_SizeDelta: {x: 70, y: 80}
+  m_Pivot: {x: .5, y: .5}
 --- !u!224 &22492122
 RectTransform:
   m_ObjectHideFlags: 1
@@ -421,8 +488,8 @@ RectTransform:
   m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -75}
-  m_SizeDelta: {x: 390, y: 40}
+  m_AnchoredPosition: {x: 70, y: -75}
+  m_SizeDelta: {x: 330, y: 35}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &22493380
 RectTransform:
@@ -439,13 +506,14 @@ RectTransform:
   - {fileID: 22407302}
   - {fileID: 22497682}
   - {fileID: 22492122}
+  - {fileID: 22477452}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 1}
 --- !u!224 &22497682
 RectTransform:
   m_ObjectHideFlags: 1
@@ -461,7 +529,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: .5}
   m_AnchorMax: {x: 1, y: .5}
   m_AnchoredPosition: {x: -200, y: -40}
-  m_SizeDelta: {x: 175, y: 28.8999996}
+  m_SizeDelta: {x: 141, y: 29}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &22499502
 RectTransform:
@@ -477,8 +545,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -35}
-  m_SizeDelta: {x: 390, y: 30}
+  m_AnchoredPosition: {x: 70, y: -40}
+  m_SizeDelta: {x: 330, y: 30}
   m_Pivot: {x: 0, y: 0}
 --- !u!1001 &100100000
 Prefab:

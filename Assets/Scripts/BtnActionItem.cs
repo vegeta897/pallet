@@ -24,13 +24,16 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
     public Text TxtTitle;
     public Text TxtDescription;
     public Text TxtQuantity;
+    public Text TxtIcon;
     public RawImage ImgProgress;
 
     private UIManager uiManager;
     private Button thisButton;
     private ColorBlock defaultColors;
     private ColorBlock selectedColors;
+    private ColorBlock attentionColors;
     private ActionItem item;
+    private bool selected;
 
     public ActionItem Item
     {
@@ -44,8 +47,6 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
             TxtQuantity.text = item.Quantity.ToString(); // Update quantity text
             TxtTitle.text = item.Type.Substring(0, 1).ToUpper() + item.Type.Substring(1, item.Type.Length - 1) + 
                 (item.Status == "new" ? " Request" : " #<b>" + item.ID + "</b>");
-            TxtDescription.text = item.Type == "delivery" ? "The distributor would like to send stock to your warehouse" :
-                "A client wants to purchase some of your stock";
         }
     }
     public void ActionItemSelected(ActionItem selectedActionItem)
@@ -56,7 +57,8 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            thisButton.colors = item == selectedActionItem ? selectedColors : defaultColors;
+            selected = item == selectedActionItem;
+            //thisButton.colors = item == selectedActionItem ? selectedColors : defaultColors;
         }
     }
 
@@ -79,6 +81,10 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
         selectedColors = defaultColors;
         selectedColors.normalColor = new Color(0.78F, 1F, 0.78F, 1F);
         selectedColors.highlightedColor = new Color(0.9F, 1F, 0.9F, 1F);
+
+        attentionColors = defaultColors;
+        attentionColors.normalColor = new Color(1F, 0.9F, 0.6F, 1F);
+        attentionColors.normalColor = new Color(1F, 0.95F, 0.8F, 1F);
 	}
 	
 	void Update () 
@@ -93,5 +99,7 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
             ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, item.StepProgress()));
         }
         TxtDescription.text = item.StepDescription();
+        thisButton.colors = selected ? selectedColors : defaultColors;
+        TxtIcon.text = item.WaitingForInput() ? "!" : "";
     }
 }
