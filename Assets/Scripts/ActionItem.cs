@@ -25,6 +25,8 @@ public abstract class ActionItem : ScriptableObject
     public abstract bool CanDoStep(int stockRacked); // Enough stock to pick for an order
     public abstract string ForwardText(); // Text to display on "accept" button for current step
     public abstract bool WaitingForInput(); // If true, user input needed to step forward
+    public abstract string StepDescription(); // Text to display in action item description
+    public abstract float StepProgress();
 
     public void StepForward() // Move to the next step in the progression
     {

@@ -161,4 +161,36 @@ public class Delivery : ActionItem
                 return false;
         }
     }
+    public override string StepDescription()
+    {
+        switch (status)
+        {
+            case "new":
+                return "The distributor wants to sell stock to your warehouse";
+            case "accepted":
+                return "Delivery will depart in the morning";
+            case "delivering":
+                return "Arrives in <b>" + Mathf.CeilToInt(TimeRemaining() / 2.5f) + "</b> hours";
+            case "delivered":
+                return "Arrived, waiting to unload";
+            case "unloading":
+                return "Unloading stock <b>" + QtyUnloaded + "</b> of <b>" + Quantity + "</b>";
+            case "complete":
+                return "Delivery completed";
+            default:
+                return "";
+        }
+    }
+    public override float StepProgress()
+    {
+        switch (status)
+        {
+            case "delivering":
+                return (DeliveryTime - TimeRemaining()) / DeliveryTime;
+            case "unloading":
+                return (Quantity - QtyUnloaded) / (float)Quantity;
+            default:
+                return -1;
+        }
+    }
 }

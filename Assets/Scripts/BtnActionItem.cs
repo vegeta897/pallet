@@ -87,58 +87,11 @@ public class BtnActionItem : MonoBehaviour, IPointerClickHandler
 	}
     void LateUpdate()
     {
-        ImgProgress.gameObject.SetActive(false);
-        if(item.Type == "delivery" && item.Status == "accepted")
+        ImgProgress.gameObject.SetActive(item.StepProgress() >= 0);
+        if(item.StepProgress() >= 0)
         {
-            TxtDescription.text = "Delivery will depart in the morning";
+            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, item.StepProgress()));
         }
-        if (item.Status == "delivering")
-        {
-            Delivery d = item as Delivery;
-            ImgProgress.gameObject.SetActive(true);
-            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (d.DeliveryTime - d.TimeRemaining()) / d.DeliveryTime));
-            TxtDescription.text = "Arrives in <b>" + Mathf.CeilToInt(d.TimeRemaining() / 2.5f) + "</b> hours";
-        }
-        if (item.Status == "delivered")
-        {
-            TxtDescription.text = "Arrived, waiting to unload";
-        }
-        if(item.Status == "unloading")
-        {
-            Delivery d = item as Delivery;
-            ImgProgress.gameObject.SetActive(true);
-            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (item.Quantity - d.QtyUnloaded) / (float)item.Quantity));
-            TxtDescription.text = "Unloading stock <b>" + d.QtyUnloaded + "</b> of <b>" + item.Quantity + "</b>";
-            TxtQuantity.text = (item.Quantity - d.QtyUnloaded).ToString();
-        }
-        if (item.Status == "picking")
-        {
-            Order o = item as Order;
-            ImgProgress.gameObject.SetActive(true);
-            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, o.QtyPicked / (float)item.Quantity));
-            TxtDescription.text = "Picking stock <b>" + o.QtyPicked + "</b> of <b>" + item.Quantity + "</b>";
-        }
-        if (item.Status == "picked")
-        {
-            TxtDescription.text = "Stock picked and ready to load";
-        }
-        if (item.Status == "loading")
-        {
-            Order o = item as Order;
-            ImgProgress.gameObject.SetActive(true);
-            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (item.Quantity - o.QtyLoaded) / (float)item.Quantity));
-            TxtDescription.text = "Loading stock <b>" + o.QtyLoaded + "</b> of <b>" + item.Quantity + "</b>";
-        }
-        if (item.Status == "loaded")
-        {
-            TxtDescription.text = "Stock loaded and ready to ship";
-        }
-        if (item.Status == "shipping")
-        {
-            Order o = item as Order;
-            ImgProgress.gameObject.SetActive(true);
-            ImgProgress.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(0, 560, (o.ShippingTime - o.TimeRemaining()) / o.ShippingTime));
-            TxtDescription.text = "Arrives at destination in <b>" + Mathf.CeilToInt(o.TimeRemaining() / 2.5f) + "</b> hours";
-        }
+        TxtDescription.text = item.StepDescription();
     }
 }

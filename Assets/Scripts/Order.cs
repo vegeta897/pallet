@@ -189,4 +189,42 @@ public class Order : ActionItem
                 return false;
         }
     }
+    public override string StepDescription()
+    {
+        switch (status)
+        {
+            case "new":
+                return "A client wants to purchase some of your stock";
+            case "accepted":
+                return "Order accepted, waiting to pick";
+            case "picking":
+                return "Picking stock <b>" + QtyPicked + "</b> of <b>" + Quantity + "</b>";
+            case "picked":
+                return "Stock picked and ready to load";
+            case "loading":
+                return "Loading stock <b>" + QtyLoaded + "</b> of <b>" + Quantity + "</b>";
+            case "loaded":
+                return "Stock loaded and ready to ship";
+            case "shipping":
+                return "Arrives at destination in <b>" + Mathf.CeilToInt(TimeRemaining() / 2.5f) + "</b> hours";
+            case "complete":
+                return "Order completed";
+            default:
+                return "";
+        }
+    }
+    public override float StepProgress()
+    {
+        switch (status)
+        {
+            case "picking":
+                return QtyPicked / (float)Quantity;
+            case "loading":
+                return (Quantity - QtyLoaded) / (float)Quantity;
+            case "shipping":
+                return (ShippingTime - TimeRemaining()) / ShippingTime;
+            default:
+                return -1;
+        }
+    }
 }
