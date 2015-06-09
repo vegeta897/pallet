@@ -40,7 +40,7 @@ public class WorkerUI : MonoBehaviour
     }
     public void HireWorker()
     {
-        Worker newWorker = WorkerManager.HireWorker((decimal)Mathf.Max(7.5f, Mathf.Round(float.Parse(WorkerForm.InpWage.text) * 100) / 100));
+        Worker newWorker = WorkerManager.HireWorker((decimal)Mathf.Max(7.5f, Mathf.Round(float.Parse(WorkerForm.InpWage.text) * 100) / 100), (int)WorkerForm.SliStartTime.value, (int)WorkerForm.SliEndTime.value);
         AddWorker(newWorker);
     }
 

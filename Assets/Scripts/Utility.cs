@@ -11,4 +11,8 @@ public static class Utility : object
     {
         return Time.timeSinceLevelLoad;
     }
+    public static float GameMinsToRealSecs(float m)
+    {
+        return m * 0.0416667f; // (Game minutes / 60) * 2.5
+    }
 }

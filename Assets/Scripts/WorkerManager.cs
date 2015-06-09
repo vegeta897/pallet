@@ -18,12 +18,12 @@ public class WorkerManager : MonoBehaviour
         set { workerCount = value; }
     }
 
-    public Worker HireWorker(decimal wage)
+    public Worker HireWorker(decimal wage, int startTime, int endTime)
     {
         workerCount += 1;
         lastWorkerID += 1;
         Worker newWorker = Instantiate(PrefabWorker) as Worker;
-        newWorker.Init(lastWorkerID, wage);
+        newWorker.Init(lastWorkerID, wage, startTime, endTime);
         newWorker.transform.SetParent(gameObject.transform, false);
         newWorker.OnStockProcessed += Warehouse.OnStockProcessed;
         workers.Add(newWorker);
@@ -42,7 +42,7 @@ public class WorkerManager : MonoBehaviour
         decimal totalWage = 0;
         for (int w = 0; w < workers.Count; w++)
         {
-            totalWage += workers[w].Wage * 8 * 10;
+            totalWage += workers[w].DailyWage() * 10m;
         }
         return totalWage;
     }
@@ -80,7 +80,7 @@ public class WorkerManager : MonoBehaviour
                     }
                     for (int w = 0; w < workers.Count; w++)
                     {
-                        if (!workers[w].Busy()) // If worker not busy
+                        if (workers[w].OnTheClock() && !workers[w].Busy()) // If worker here and not busy
                         {
                             workers[w].Task.ActionItem = actionItems[i]; // Assign task to this worker
                             actionItems[i].WorkerCount += 1;
@@ -96,7 +96,7 @@ public class WorkerManager : MonoBehaviour
             {
                 if (Warehouse.StockUnloaded - StockRacking > 0) // If there is stock waiting to be racked
                 {
-                    if (!workers[w].Busy()) // If worker not busy
+                    if (workers[w].OnTheClock() && !workers[w].Busy()) // If worker here and not busy
                     {
                         workers[w].Task.QtyToRack = 1; // Tell worker to rack
                         StockRacking += 1;

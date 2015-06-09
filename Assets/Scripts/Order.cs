@@ -124,9 +124,9 @@ public class Order : ActionItem
                 break;
         }
     }
-    public override int QtyTime()
+    public override float QtyTime()
     {
-        return status == "picking" ? 2 : 1;
+        return Utility.GameMinsToRealSecs(status == "picking" ? 7 : 0.8f);
     }
     public override void ProcessStock(int qty)
     {

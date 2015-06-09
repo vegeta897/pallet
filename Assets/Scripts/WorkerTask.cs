@@ -8,6 +8,6 @@ public class WorkerTask : ScriptableObject
 
     public float Interval()
     {
-        return ActionItem == null ? 2 : ActionItem.QtyTime();
+        return ActionItem == null ? Utility.GameMinsToRealSecs(5) : ActionItem.QtyTime();
     }
 }

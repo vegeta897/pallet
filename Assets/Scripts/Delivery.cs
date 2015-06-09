@@ -109,9 +109,9 @@ public class Delivery : ActionItem
                 break;
         }
     }
-    public override int QtyTime()
+    public override float QtyTime()
     {
-        return 1;
+        return Utility.GameMinsToRealSecs(0.8f);
     }
     public override void ProcessStock(int qty)
     {
