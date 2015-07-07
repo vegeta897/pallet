@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public Warehouse Warehouse;
     public Text TxtTime;
     public Text TxtTimeAMPM;
+    public Text TxtWeekDay;
     public Button BtnPause;
     public Button Btn1x;
     public Button Btn2x;
@@ -144,6 +145,7 @@ public class UIManager : MonoBehaviour
         TxtStockPicked.text = Warehouse.StockPicked.ToString();
         TxtTime.text = (Utility.Hour() % 12 == 0 ? 12 : Utility.Hour() % 12) + ":00";
         TxtTimeAMPM.text = Utility.Hour() % 24 > 11 ? "PM" : "AM";
+        TxtWeekDay.text = Utility.WeekDay();
     }
 
     public void Reset()
